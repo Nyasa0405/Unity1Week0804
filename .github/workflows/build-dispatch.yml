@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Trigger Unity Cloud Build manually
-        uses: Matuyuhi/unity-cloud-build-action@v0.2.3
+        uses: Matuyuhi/unity-cloud-build-action@v0.2.4
         with:
           unity_org_id: ${{ secrets.UNITY_ORG_ID }}
           unity_project_id: ${{ secrets.UNITY_PROJECT_ID }}
