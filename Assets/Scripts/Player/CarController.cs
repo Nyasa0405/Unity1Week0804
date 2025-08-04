@@ -1,27 +1,29 @@
+using Interface;
+using Main;
 using UnityEngine;
 
 namespace Player
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class CarController : MonoBehaviour
+    public class CarController : MonoBehaviour, IPlayer
     {
         /// <summary>
         /// 車の最大前方速度（メートル/秒）。
         /// </summary>
         [Header("Settings"), SerializeField]
-        private float maxSpeed = 20f; // in m/s
+        private float maxSpeed = 10f; // in m/s
 
         /// <summary>
         /// 加速時に適用される力。値が大きいほど加速が強くなる。
         /// </summary>
         [SerializeField]
-        private float accelerationForce = 1500f; // Force applied when accelerating
+        private float accelerationForce = 1100f; // Force applied when accelerating
 
         /// <summary>
         /// 1秒あたりの最大ステアリング角度（度）。
         /// </summary>
         [SerializeField]
-        private float maxSteerAngle = 45f; // degrees per second
+        private float maxSteerAngle = 60f; // degrees per second
 
         /// <summary>
         /// スロットル入力時のステアリング減衰率。
@@ -45,6 +47,7 @@ namespace Player
         private Rigidbody rb;
         private float steeringInput;
         private float throttleInput;
+        public Transform Transform => transform;
 
         private void Start()
         {
@@ -54,6 +57,7 @@ namespace Player
             rb.linearDamping = 0.14f;
             // 角ダンピングを設定し、回転の変化を滑らかに制御
             rb.angularDamping = 0.8f;
+            GamePlayMode.Shared.OnPlayerSpawn(this);
         }
 
         private void FixedUpdate()
@@ -90,6 +94,7 @@ namespace Player
 
         /// <summary>
         /// Y軸回りに車を回転させる。速度とスロットル入力に応じて操舵性能を減衰する
+        /// 加速していると急カーブしづらいを再現する
         /// </summary>
         private void HandleSteering()
         {
