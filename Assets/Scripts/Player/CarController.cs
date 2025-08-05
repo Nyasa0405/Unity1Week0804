@@ -8,101 +8,83 @@ namespace Player
     public class CarController : MonoBehaviour, IPlayer
     {
         /// <summary>
-        /// 車の最大前方速度（メートル/秒）。
+        ///     車の最大前方速度（メートル/秒）。
         /// </summary>
         [Header("Settings"), SerializeField]
         private float maxSpeed = 10f; // 車の最大前方速度（m/s）
 
         /// <summary>
-        /// 加速時に適用される力。値が大きいほど加速が強くなる。
+        ///     加速時に適用される力。値が大きいほど加速が強くなる。
         /// </summary>
         [SerializeField]
         private float accelerationForce = 1100f; // 加速時に適用される力
 
         /// <summary>
-        /// 1秒あたりの最大ステアリング角度（度）。
+        ///     1秒あたりの最大ステアリング角度（度）。
         /// </summary>
         [SerializeField]
         private float maxSteerAngle = 60f; // 最大ステアリング角度（度/秒）
 
-        [Tooltip("低速時に適用するステアリング倍率")]
-        [SerializeField]
+        [Tooltip("低速時に適用するステアリング倍率"), SerializeField]
         private float lowSpeedSteerMultiplier = 1.5f; // 低速時のステアリング倍率（>1）
 
-        [Tooltip("低速と判断する速度のしきい値")]
-        [SerializeField]
+        [Tooltip("低速と判断する速度のしきい値"), SerializeField]
         private float lowSpeedThreshold = 2f; // 低速しきい値（m/s）
 
-        [Tooltip("最高速到達時の最小ステアリング倍率")]
-        [SerializeField, Range(0f, 1f)]
+        [Tooltip("最高速到達時の最小ステアリング倍率"), SerializeField, Range(0f, 1f)]
         private float minSteerAtMaxSpeed = 0.2f; // 高速時の最小ステアリング倍率
 
-        [Tooltip("アクセル入力時のステアリング減衰率")]
-        [SerializeField, Range(0f, 1f)]
+        [Tooltip("アクセル入力時のステアリング減衰率"), SerializeField, Range(0f, 1f)]
         private float throttleSteerReduction = 0.5f;
 
-        [Header("Realistic Physics")]
-        [Tooltip("空気抵抗係数")]
-        [SerializeField]
+        [Header("Realistic Physics"), Tooltip("空気抵抗係数"), SerializeField]
         private float dragCoefficient = 0.3f; // 空気抵抗係数
 
-        [Tooltip("エンジンブレーキの強さ")]
-        [SerializeField]
+        [Tooltip("エンジンブレーキの強さ"), SerializeField]
         private float engineBrakeForce = 2f; // エンジンブレーキ
 
-        [Tooltip("静止時の最小ステアリング速度")]
-        [SerializeField]
+        [Tooltip("静止時の最小ステアリング速度"), SerializeField]
         private float minSteeringSpeed = 0.5f; // 静止時の最小ステアリング速度
 
-        [Tooltip("速度に応じた減速係数（高速時は減速が遅い）")]
-        [SerializeField]
+        [Tooltip("速度に応じた減速係数（高速時は減速が遅い）"), SerializeField]
         private float speedBasedDecay = 0.8f; // 速度に応じた減速係数
 
-        [Header("Drift Settings")]
-        [Tooltip("ドリフト開始の速度しきい値")]
-        [SerializeField]
+        [Header("Drift Settings"), Tooltip("ドリフト開始の速度しきい値"), SerializeField]
         private float driftSpeedThreshold = 3f; // ドリフト開始速度
 
-        [Tooltip("ドリフト時の横方向速度保持率")]
-        [SerializeField, Range(0f, 1f)]
+        [Tooltip("ドリフト時の横方向速度保持率"), SerializeField, Range(0f, 1f)]
         private float driftFactor = 0.85f; // ドリフト時の横滑り量
 
-        [Tooltip("ドリフト時の後輪スリップ係数")]
-        [SerializeField, Range(0f, 1f)]
+        [Tooltip("ドリフト時の後輪スリップ係数"), SerializeField, Range(0f, 1f)]
         private float rearWheelSlip = 0.3f; // 後輪スリップ
 
-        [Tooltip("ドリフト時の前輪グリップ係数")]
-        [SerializeField, Range(0f, 1f)]
+        [Tooltip("ドリフト時の前輪グリップ係数"), SerializeField, Range(0f, 1f)]
         private float frontWheelGrip = 0.8f; // 前輪グリップ
 
-        [Header("Mill Rotation Settings")]
-        [SerializeField]
+        [Header("Mill Rotation Settings"), SerializeField]
         private Transform millTransform;
 
-        [Tooltip("前進時のミル回転速度（度/秒）")]
-        [SerializeField]
+        [Tooltip("前進時のミル回転速度（度/秒）"), SerializeField]
         private float forwardMillRotationSpeed = 30f;
 
-        [Tooltip("旋回時のミル回転速度（度/秒）")]
-        [SerializeField]
+        [Tooltip("旋回時のミル回転速度（度/秒）"), SerializeField]
         private float steeringMillRotationSpeed = 120f;
 
-        [Tooltip("ドリフト時のミル回転速度（度/秒）")]
-        [SerializeField]
+        [Tooltip("ドリフト時のミル回転速度（度/秒）"), SerializeField]
         private float driftMillRotationSpeed = 360f;
 
-        [Tooltip("ミル回転の減衰速度")]
-        [SerializeField]
+        [Tooltip("ミル回転の減衰速度"), SerializeField]
         private float millRotationDecay = 5f;
-
-        private Rigidbody rb;
-        private float steeringInput;
-        private float throttleInput;
         private float currentMillRotationSpeed;
+        private float currentSpeed;
+        private float grindTimer;
         private bool isDrifting;
         private Vector3 lastVelocity;
-        private float currentSpeed;
-        public Transform Transform => transform;
+
+        private Rigidbody rb;
+        private float spillTimer;
+        private float steeringInput;
+        private float throttleInput;
 
         private void Start()
         {
@@ -127,7 +109,40 @@ namespace Player
             HandleDeceleration();
             HandleDrift();
             UpdateMillRotation();
+            HandleGrinding();
+            HandleSpilling();
         }
+
+        private void OnCollisionEnter(Collision _collision)
+        {
+            // 高速衝突時のこぼれ判定
+            if (currentSpeed > GamePlayMode.Shared.Settings.SpillSpeedThreshold)
+            {
+                GamePlayMode.Shared.PlayerState.IsSpilling = true;
+            }
+        }
+
+        private void OnCollisionExit(Collision _collision)
+        {
+            // 衝突終了時はこぼれを停止
+            GamePlayMode.Shared.PlayerState.IsSpilling = false;
+        }
+
+        private void OnTriggerEnter(Collider _other)
+        {
+            // 豆を轢く判定
+            ICoffeeBean coffeeBean = _other.GetComponent<ICoffeeBean>();
+            if (coffeeBean != null)
+            {
+                // 轢いた豆を削除
+                GamePlayMode.Shared.OnBeanDestroyed(coffeeBean);
+                Destroy(_other.gameObject);
+
+                // 豆を轢いた処理（スコア加算なし）
+                GamePlayMode.Shared.PlayerState.CrushBean();
+            }
+        }
+        public Transform Transform => transform;
 
         private void HandleAcceleration()
         {
@@ -151,7 +166,7 @@ namespace Player
             {
                 Vector3 forward = transform.forward;
                 float forwardVel = Vector3.Dot(rb.linearVelocity, forward);
-                
+
                 // 前進している場合のみエンジンブレーキを適用
                 if (forwardVel > 0.1f)
                 {
@@ -209,43 +224,42 @@ namespace Player
             float forwardSpeed = Vector3.Dot(rb.linearVelocity, transform.forward);
 
             // ドリフト条件の判定
-            bool shouldDrift = speed > driftSpeedThreshold && 
-                              lateralSpeed > speed * 0.3f && 
-                              Mathf.Abs(steeringInput) > 0.1f &&
-                              throttleInput > 0.1f;
+            bool shouldDrift = speed > driftSpeedThreshold &&
+                               lateralSpeed > speed * 0.3f &&
+                               Mathf.Abs(steeringInput) > 0.1f &&
+                               throttleInput > 0.1f;
 
             isDrifting = shouldDrift;
 
-            Vector3 vel;
             if (isDrifting)
             {
                 // ドリフト時の挙動
                 Vector3 forwardVel = transform.forward * forwardSpeed;
                 Vector3 lateralVel = transform.right * Vector3.Dot(rb.linearVelocity, transform.right);
-                
+
                 // 後輪スリップをシミュレート
                 Vector3 rearWheelForce = -lateralVel * rearWheelSlip * accelerationForce * Time.fixedDeltaTime;
                 rb.AddForce(rearWheelForce);
-                
+
                 // 前輪グリップをシミュレート
                 Vector3 frontWheelForce = lateralVel * (1f - frontWheelGrip) * accelerationForce * Time.fixedDeltaTime;
                 rb.AddForce(frontWheelForce);
-                
+
                 // 横方向速度の保持
-                vel = forwardVel + lateralVel * driftFactor;
+                rb.linearVelocity = forwardVel + lateralVel * driftFactor;
             }
             else
             {
                 // 通常走行時の横方向速度減衰（速度に応じて変化）
                 Vector3 forwardVel = transform.forward * Vector3.Dot(rb.linearVelocity, transform.forward);
                 Vector3 lateralVel = transform.right * Vector3.Dot(rb.linearVelocity, transform.right);
-                
+
                 // 速度が高いほど横方向速度を保持
                 float lateralDecay = Mathf.Lerp(0.95f, 0.98f, Mathf.Clamp01(speed / maxSpeed));
-                vel = forwardVel + lateralVel * lateralDecay;
+                Vector3 vel = forwardVel + lateralVel * lateralDecay;
+                vel.y = 0f;
+                rb.linearVelocity = vel;
             }
-            vel.y = 0f;
-            rb.linearVelocity = vel;
         }
 
         private void UpdateMillRotation()
@@ -276,6 +290,52 @@ namespace Player
             if (millTransform != null && currentMillRotationSpeed > 0.1f)
             {
                 millTransform.Rotate(0f, currentMillRotationSpeed * Time.fixedDeltaTime, 0f, Space.Self);
+            }
+        }
+
+        private void HandleGrinding()
+        {
+            // ミルが回転している時は豆を挽く
+            if (currentMillRotationSpeed > GamePlayMode.Shared.Settings.MinMillRotationForGrinding &&
+                GamePlayMode.Shared.PlayerState.GroundBeans > 0)
+            {
+                grindTimer += Time.fixedDeltaTime;
+
+                // ミルの回転速度に応じて挽くスピードを変える
+                float grindSpeedMultiplier = currentMillRotationSpeed / 100f; // 100度/秒を基準とする
+                float grindInterval = 1f / (GamePlayMode.Shared.Settings.BaseMillGrindSpeed * grindSpeedMultiplier);
+
+                if (grindTimer >= grindInterval)
+                {
+                    int beansToGrind = Mathf.Min(1, GamePlayMode.Shared.PlayerState.GroundBeans);
+                    GamePlayMode.Shared.PlayerState.ConsumeGroundBeans(beansToGrind);
+                    GamePlayMode.Shared.PlayerState.AddGroundCoffee(beansToGrind);
+                    grindTimer = 0f;
+                }
+            }
+            else
+            {
+                grindTimer = 0f;
+            }
+        }
+
+        private void HandleSpilling()
+        {
+            // 高速衝突時はコーヒーがこぼれる
+            if (GamePlayMode.Shared.PlayerState.IsSpilling)
+            {
+                spillTimer += Time.fixedDeltaTime;
+                float spillInterval = 1f / GamePlayMode.Shared.Settings.SpillSpeed;
+
+                if (spillTimer >= spillInterval)
+                {
+                    GamePlayMode.Shared.PlayerState.RemoveGroundCoffee(1);
+                    spillTimer = 0f;
+                }
+            }
+            else
+            {
+                spillTimer = 0f;
             }
         }
     }

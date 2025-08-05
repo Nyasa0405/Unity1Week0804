@@ -5,7 +5,7 @@ namespace Interface
 {
     public interface ICoffeeBean
     {
-        public Guid Id { get; }  // ユニークなIDを持つ
+        public Guid Id { get; } // ユニークなIDを持つ
 
         public Transform Transform { get; }
     }
