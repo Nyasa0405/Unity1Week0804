@@ -41,7 +41,6 @@ namespace Component
         private void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
-            GamePlayMode.Shared.Beans.Add(this);
         }
 
         private void OnDestroy()
@@ -52,6 +51,7 @@ namespace Component
 
         private void Start()
         {
+            GamePlayMode.Shared.Beans.Add(this);
             agent.speed = roamSpeed;
             roamCoroutine = StartCoroutine(RoamRoutine());
         }
