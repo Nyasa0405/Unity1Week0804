@@ -151,11 +151,11 @@ namespace Player
 
             if (throttleInput > 0 && forwardVel < maxSpeed)
             {
-                rb.AddForce(forward * throttleInput * accelerationForce * Time.fixedDeltaTime);
+                rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
             }
             else if (throttleInput < 0)
             {
-                rb.AddForce(forward * throttleInput * accelerationForce * Time.fixedDeltaTime);
+                rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
             }
         }
 
@@ -170,7 +170,7 @@ namespace Player
                 // 前進している場合のみエンジンブレーキを適用
                 if (forwardVel > 0.1f)
                 {
-                    Vector3 engineBrakeForceVector = -forward * engineBrakeForce * Time.fixedDeltaTime;
+                    Vector3 engineBrakeForceVector = -forward * (engineBrakeForce * Time.fixedDeltaTime);
                     rb.AddForce(engineBrakeForceVector);
                 }
             }
@@ -178,7 +178,7 @@ namespace Player
             // 空気抵抗（速度の2乗に比例）
             if (currentSpeed > 0.1f)
             {
-                Vector3 dragForce = -rb.linearVelocity.normalized * dragCoefficient * currentSpeed * currentSpeed * Time.fixedDeltaTime;
+                Vector3 dragForce = -rb.linearVelocity.normalized * (dragCoefficient * currentSpeed * currentSpeed * Time.fixedDeltaTime);
                 rb.AddForce(dragForce);
             }
         }
@@ -238,11 +238,11 @@ namespace Player
                 Vector3 lateralVel = transform.right * Vector3.Dot(rb.linearVelocity, transform.right);
 
                 // 後輪スリップをシミュレート
-                Vector3 rearWheelForce = -lateralVel * rearWheelSlip * accelerationForce * Time.fixedDeltaTime;
+                Vector3 rearWheelForce = -lateralVel * (rearWheelSlip * accelerationForce * Time.fixedDeltaTime);
                 rb.AddForce(rearWheelForce);
 
                 // 前輪グリップをシミュレート
-                Vector3 frontWheelForce = lateralVel * (1f - frontWheelGrip) * accelerationForce * Time.fixedDeltaTime;
+                Vector3 frontWheelForce = lateralVel * ((1f - frontWheelGrip) * accelerationForce * Time.fixedDeltaTime);
                 rb.AddForce(frontWheelForce);
 
                 // 横方向速度の保持
