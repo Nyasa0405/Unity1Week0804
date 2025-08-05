@@ -11,19 +11,19 @@ namespace Player
         /// 車の最大前方速度（メートル/秒）。
         /// </summary>
         [Header("Settings"), SerializeField]
-        private float maxSpeed = 10f; // in m/s
+        private float maxSpeed = 10f; // 車の最大前方速度（m/s）
 
         /// <summary>
         /// 加速時に適用される力。値が大きいほど加速が強くなる。
         /// </summary>
         [SerializeField]
-        private float accelerationForce = 1100f; // Force applied when accelerating
+        private float accelerationForce = 1100f; // 加速時に適用される力
 
         /// <summary>
         /// 1秒あたりの最大ステアリング角度（度）。
         /// </summary>
         [SerializeField]
-        private float maxSteerAngle = 60f; // degrees per second
+        private float maxSteerAngle = 60f; // 最大ステアリング角度（度/秒）
 
         /// <summary>
         /// スロットル入力時のステアリング減衰率。
@@ -33,7 +33,10 @@ namespace Player
         /// 1.0 → 全開時にステアリング無効
         /// </summary>
         [SerializeField, Range(0f, 1f)]
-        private float throttleSteerReduction = 0.5f;
+        private float throttleSteerReduction = 0.5f; // アクセル入力時のステアリング減衰率
+
+        [SerializeField, Range(0f, 1f)]
+        private float minSteerAtMaxSpeed = 0.5f; // 高速時の最小ステアリング倍率
 
         /// <summary>
         /// ドリフト時の横方向速度保持率。
@@ -42,7 +45,7 @@ namespace Player
         /// 1.0 → ドリフトなし
         /// </summary>
         [SerializeField, Range(0f, 1f)]
-        private float driftFactor = 0.85f;
+        private float driftFactor = 0.85f; // ドリフト時の横方向速度保持率
 
         private Rigidbody rb;
         private float steeringInput;
@@ -98,12 +101,14 @@ namespace Player
         /// </summary>
         private void HandleSteering()
         {
-            // 速度比でステアリング感度を減衰
-            float speedRatio = rb.linearVelocity.magnitude / maxSpeed;
-            // スロットル入力時のステアリング減衰率を適用
-            float steerFactor = 1f - Mathf.Abs(throttleInput) * throttleSteerReduction;
-            // 回転量を計算
-            float steerAmount = steeringInput * maxSteerAngle * (1f - speedRatio) * steerFactor;
+            // 速度に応じてステアリング感度を線形補間
+            float speedRatio = rb.linearVelocity.magnitude / maxSpeed; // 0～1
+            float speedSteerFactor = Mathf.Lerp(1f, minSteerAtMaxSpeed, speedRatio);
+
+            // アクセル入力時の追加減衰
+            float throttleFactor = 1f - Mathf.Abs(throttleInput) * throttleSteerReduction;
+
+            float steerAmount = steeringInput * maxSteerAngle * speedSteerFactor * throttleFactor;
             Quaternion deltaRot = Quaternion.Euler(0f, steerAmount * Time.fixedDeltaTime, 0f);
             rb.MoveRotation(rb.rotation * deltaRot);
         }

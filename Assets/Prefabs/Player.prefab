@@ -148,4 +148,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad72606ccc474d9dab23959781a6960e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
+  maxSpeed: 10
+  accelerationForce: 1100
+  maxSteerAngle: 60
+  throttleSteerReduction: 0.5
+  minSteerAtMaxSpeed: 0.5
+  driftFactor: 0.85
