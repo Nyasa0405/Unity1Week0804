@@ -25,27 +25,25 @@ namespace Player
         [SerializeField]
         private float maxSteerAngle = 60f; // 最大ステアリング角度（度/秒）
 
-        /// <summary>
-        /// スロットル入力時のステアリング減衰率。
-        /// 範囲: 0.0（減衰なし）〜1.0（完全減衰）。
-        /// 0.0 → アクセル時にステアリング減衰なし
-        /// 0.5 → 全開時に半分のステアリング性能
-        /// 1.0 → 全開時にステアリング無効
-        /// </summary>
-        [SerializeField, Range(0f, 1f)]
-        private float throttleSteerReduction = 0.5f; // アクセル入力時のステアリング減衰率
+        [Tooltip("低速時に適用するステアリング倍率")]
+        [SerializeField]
+        private float lowSpeedSteerMultiplier = 1.5f; // 低速時のステアリング倍率（>1）
 
-        [SerializeField, Range(0f, 1f)]
-        private float minSteerAtMaxSpeed = 0.5f; // 高速時の最小ステアリング倍率
+        [Tooltip("低速と判断する速度のしきい値")]
+        [SerializeField]
+        private float lowSpeedThreshold = 2f; // 低速しきい値（m/s）
 
-        /// <summary>
-        /// ドリフト時の横方向速度保持率。
-        /// 範囲: 0.0（完全横滑り）〜1.0（横滑りなし）。
-        /// 0.0 → 横滑り100%
-        /// 1.0 → ドリフトなし
-        /// </summary>
+        [Tooltip("最高速到達時の最小ステアリング倍率")]
         [SerializeField, Range(0f, 1f)]
-        private float driftFactor = 0.85f; // ドリフト時の横方向速度保持率
+        private float minSteerAtMaxSpeed = 0.2f; // 高速時の最小ステアリング倍率
+
+        [Tooltip("アクセル入力時のステアリング減衰率")]
+        [SerializeField, Range(0f, 1f)]
+        private float throttleSteerReduction = 0.5f;
+
+        [Tooltip("ドリフト時の横方向速度保持率")]
+        [SerializeField, Range(0f, 1f)]
+        private float driftFactor = 0.85f; // ドリフト時の横滑り量
 
         private Rigidbody rb;
         private float steeringInput;
@@ -74,53 +72,52 @@ namespace Player
             ApplyDrift();
         }
 
-        /// <summary>
-        /// 前後方向に力を加え、前方速度をmaxSpeed以下に制限する
-        /// </summary>
         private void HandleAcceleration()
         {
             Vector3 forward = transform.forward;
-            // 現在の速度を前方向に投影して取得
             float forwardVel = Vector3.Dot(rb.linearVelocity, forward);
 
             if (throttleInput > 0 && forwardVel < maxSpeed)
             {
-                // 前方に力を加える
                 rb.AddForce(forward * throttleInput * accelerationForce * Time.fixedDeltaTime);
             }
             else if (throttleInput < 0)
             {
-                // 後退またはブレーキ時に力を加える
                 rb.AddForce(forward * throttleInput * accelerationForce * Time.fixedDeltaTime);
             }
         }
 
-        /// <summary>
-        /// Y軸回りに車を回転させる。速度とスロットル入力に応じて操舵性能を減衰する
-        /// 加速していると急カーブしづらいを再現する
-        /// </summary>
         private void HandleSteering()
         {
-            // 速度に応じてステアリング感度を線形補間
-            float speedRatio = rb.linearVelocity.magnitude / maxSpeed; // 0～1
-            float speedSteerFactor = Mathf.Lerp(1f, minSteerAtMaxSpeed, speedRatio);
+            float speed = rb.linearVelocity.magnitude;
+            float speedSteerFactor;
+
+            // 低速時：速度がしきい値以下なら倍率を lowSpeedSteerMultiplier から 1 へ補間
+            if (speed <= lowSpeedThreshold)
+            {
+                float t = speed / lowSpeedThreshold; // 0～1
+                speedSteerFactor = Mathf.Lerp(lowSpeedSteerMultiplier, 1f, t);
+            }
+            else
+            {
+                // しきい値以上：速度に応じて 1 から minSteerAtMaxSpeed へ補間
+                float t = (speed - lowSpeedThreshold) / (maxSpeed - lowSpeedThreshold);
+                speedSteerFactor = Mathf.Lerp(1f, minSteerAtMaxSpeed, Mathf.Clamp01(t));
+            }
 
             // アクセル入力時の追加減衰
             float throttleFactor = 1f - Mathf.Abs(throttleInput) * throttleSteerReduction;
 
+            // 最終的なステアリング角度
             float steerAmount = steeringInput * maxSteerAngle * speedSteerFactor * throttleFactor;
             Quaternion deltaRot = Quaternion.Euler(0f, steerAmount * Time.fixedDeltaTime, 0f);
             rb.MoveRotation(rb.rotation * deltaRot);
         }
 
-        /// <summary>
-        /// 横方向の速度成分を分離し、driftFactorで減衰させてドリフトをシミュレート
-        /// </summary>
         private void ApplyDrift()
         {
             Vector3 forwardVel = transform.forward * Vector3.Dot(rb.linearVelocity, transform.forward);
             Vector3 lateralVel = transform.right * Vector3.Dot(rb.linearVelocity, transform.right);
-            // 横方向の速度をdriftFactor分だけ残す
             rb.linearVelocity = forwardVel + lateralVel * driftFactor;
         }
     }
