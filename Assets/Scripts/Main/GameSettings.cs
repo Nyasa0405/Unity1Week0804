@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Main
@@ -8,7 +9,7 @@ namespace Main
         [Header("General Settings"), SerializeField]
         private float gameTimeSec = 60f; // ゲームの持続時間を60秒に設定
         [Header("Bean Settings"), SerializeField]
-        private GameObject beanPrefab;
+        private List<GameObject> beanPrefabs;
         [SerializeField] private int maxBeanCount = 30; // フィールドの豆の数を6-10個に調整
         [SerializeField] private float beanSpawnRadius = 15f;
         [SerializeField] private float beanSpawnInterval = 0.3f; // スポーン間隔を長く
@@ -37,7 +38,7 @@ namespace Main
         [SerializeField] private float minMillRotationForGrinding = 30f; // 挽くための最小ミル回転速度を下げる
 
         public float GameTimeSec => gameTimeSec;
-        public GameObject BeanPrefab => beanPrefab;
+        public List<GameObject> BeanPrefabs => beanPrefabs;
         public int MaxBeanCount => maxBeanCount;
         public float BeanSpawnRadius => beanSpawnRadius;
         public float BeanSpawnInterval => beanSpawnInterval;

@@ -5,17 +5,13 @@ using Interface;
 using Main;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.VFX;
 using Random = UnityEngine.Random;
 
 namespace Component
 {
     [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Collider))]
-    public class CoffeeBeanAgent : MonoBehaviour, ICoffeeBean
+    public class CoffeeBeanMovement : MonoBehaviour, ICoffeeBean
     {
-        [SerializeField]
-        private VisualEffect crushEffect; // ビーンのエフェクト
-
         [Header("Roaming Settings"), SerializeField]
          private float roamRadius = 10f; // Radius for roaming wander
         [SerializeField] private float roamInterval = 3f; // Time between roam destinations
