@@ -1,6 +1,8 @@
 using Interface;
 using Main;
+using Model.Generated;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Player
 {
@@ -85,23 +87,30 @@ namespace Player
         private float spillTimer;
         private float steeringInput;
         private float throttleInput;
+        private InputSystem_Actions inputActions;
+        private InputAction moveAction;
 
         private void Start()
         {
             rb = GetComponent<Rigidbody>();
+            inputActions = new InputSystem_Actions();
             // X軸とZ軸の回転を固定し、車が横転するのを防止
             // リニアダンピングを設定し、入力がないときに徐々に減速
             rb.linearDamping = 0.14f;
             // 角ダンピングを設定し、回転の変化を滑らかに制御
             rb.angularDamping = 0.8f;
+            moveAction = inputActions.Player.Move;
+
+            inputActions.Enable();
             GamePlayMode.Shared.OnPlayerSpawn(this);
         }
 
         private void FixedUpdate()
         {
             // 入力を取得: 縦(forward/back)と横(left/right)
-            throttleInput = Input.GetAxis("Vertical");
-            steeringInput = Input.GetAxis("Horizontal");
+            var moveValue = moveAction.ReadValue<Vector2>();
+            throttleInput = moveValue.y; // 縦軸の入力（前進/後退）
+            steeringInput = moveValue.x; // 横軸の入力（左/右）
             currentSpeed = rb.linearVelocity.magnitude;
 
             HandleSteering();
