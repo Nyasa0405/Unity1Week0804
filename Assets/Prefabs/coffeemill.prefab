@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: coffeemill
       objectReference: {fileID: 0}
+    - target: {fileID: 3404860643266031695, guid: 0330711179f7f204fb2d9a31491db5b6, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3d9d61939420b274c98dae121913e7cf, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
