@@ -5,8 +5,10 @@ namespace Main
     [CreateAssetMenu(fileName = "GameSettings", menuName = "Coffee Game/Game Settings")]
     public class GameSettings : ScriptableObject
     {
+        [Header("General Settings"), SerializeField]
+        private float gameTimeSec = 60f; // ゲームの持続時間を60秒に設定
         [Header("Bean Settings"), SerializeField]
-         private GameObject beanPrefab;
+        private GameObject beanPrefab;
         [SerializeField] private int maxBeanCount = 30; // フィールドの豆の数を6-10個に調整
         [SerializeField] private float beanSpawnRadius = 15f;
         [SerializeField] private float beanSpawnInterval = 0.3f; // スポーン間隔を長く
@@ -27,6 +29,7 @@ namespace Main
         [SerializeField] private float spillSpeedThreshold = 5f; // 衝突時のこぼれ判定速度
         [SerializeField] private float minMillRotationForGrinding = 30f; // 挽くための最小ミル回転速度を下げる
 
+        public float GameTimeSec => gameTimeSec;
         public GameObject BeanPrefab => beanPrefab;
         public int MaxBeanCount => maxBeanCount;
         public float BeanSpawnRadius => beanSpawnRadius;
@@ -36,9 +39,6 @@ namespace Main
         public float BaseMillGrindSpeed => baseMillGrindSpeed;
         public float SpillSpeed => spillSpeed;
         public int ScorePerGroundCoffee => scorePerGroundCoffee;
-        public int ComboMultiplier => comboMultiplier;
-        public float ComboTimeWindow => comboTimeWindow;
-        public float CrushRadius => crushRadius;
         public float SpillSpeedThreshold => spillSpeedThreshold;
         public float MinMillRotationForGrinding => minMillRotationForGrinding;
     }

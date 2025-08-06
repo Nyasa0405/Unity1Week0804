@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d6b03cf6d2c4d438bfe0c173c3d3b8, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
+  gameTimeSec: 40
   beanPrefab: {fileID: 7023765879481593722, guid: ee0985b1a659a4d0bbfffe35c55cab56, type: 3}
   maxBeanCount: 30
   beanSpawnRadius: 15
