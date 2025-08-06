@@ -34,4 +34,4 @@ MonoBehaviour:
   comboTimeWindow: 2
   crushRadius: 1.5
   spillSpeedThreshold: 5
-  minMillRotationForGrinding: 30
+  minMillRotationForGrinding: 0.1
