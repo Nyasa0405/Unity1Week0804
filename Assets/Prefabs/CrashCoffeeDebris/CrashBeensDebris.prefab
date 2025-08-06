@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7491349848406133695}
   - component: {fileID: 532556624100257543}
   - component: {fileID: 4689543358854185016}
+  - component: {fileID: 3750108373348058529}
   m_Layer: 0
   m_Name: CrashBeensDebris
   m_TagString: Untagged
@@ -59,6 +60,9 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: 2
         m_Name: MaxVelocitySpeed
+        m_Overridden: 1
+      - m_Value: 7
+        m_Name: BaseSize
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -123,3 +127,16 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &3750108373348058529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 40992636644726091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a478ccf7654925b8335d41bf279ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crushEffect: {fileID: 532556624100257543}

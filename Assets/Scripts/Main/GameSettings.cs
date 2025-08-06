@@ -13,6 +13,13 @@ namespace Main
         [SerializeField] private float beanSpawnRadius = 15f;
         [SerializeField] private float beanSpawnInterval = 0.3f; // スポーン間隔を長く
 
+        [Header("Bean Crush Settings"), SerializeField]
+        private GameObject crushBeanEffectPrefab;
+        [SerializeField]
+        private float crushBaseDiffusion = 2.2f;
+
+        [SerializeField] private float crushDiffusionByPlayerSpeedRate = 5f; // 轢いた豆の拡散範囲を調整
+
         [Header("Gauge Settings"), SerializeField]
          private int maxGroundBeans = 20; // 轢いた豆の最大数を調整
         [SerializeField] private int maxGroundCoffee = 10; // 挽いたコーヒーの最大数を調整
@@ -41,5 +48,8 @@ namespace Main
         public int ScorePerGroundCoffee => scorePerGroundCoffee;
         public float SpillSpeedThreshold => spillSpeedThreshold;
         public float MinMillRotationForGrinding => minMillRotationForGrinding;
+        public GameObject CrushBeanEffectPrefab => crushBeanEffectPrefab;
+        public float CrushBaseDiffusion => crushBaseDiffusion;
+        public float CrushDiffusionByPlayerSpeedRate => crushDiffusionByPlayerSpeedRate;
     }
 }

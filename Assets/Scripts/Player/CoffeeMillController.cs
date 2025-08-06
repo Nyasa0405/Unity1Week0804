@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 namespace Player
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class CarController : MonoBehaviour, IPlayer
+    public class CoffeeMillController : MonoBehaviour, IPlayer
     {
         private static readonly int RotatePowerRef = Shader.PropertyToID("_RotatePower");
         /// <summary>
@@ -156,21 +156,11 @@ namespace Player
             GamePlayMode.Shared.PlayerState.IsSpilling = false;
         }
 
-        private void OnTriggerEnter(Collider _other)
-        {
-            // 豆を轢く判定
-            ICoffeeBean coffeeBean = _other.GetComponent<ICoffeeBean>();
-            if (coffeeBean != null)
-            {
-                // 轢いた豆を削除
-                GamePlayMode.Shared.OnBeanDestroyed(coffeeBean);
-                Destroy(_other.gameObject);
-
-                // 豆を轢いた処理（スコア加算なし）
-                GamePlayMode.Shared.PlayerState.CrushBean();
-            }
-        }
         public Transform Transform => transform;
+
+        public float Speed => currentSpeed;
+
+        public float MaxSpeed => maxSpeed;
 
         private void HandleAcceleration()
         {
