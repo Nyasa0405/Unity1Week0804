@@ -27,7 +27,7 @@ namespace Main
         private Coroutine spawnCoroutine;
         public static GamePlayMode Shared { get; private set; }
         public IPlayer Player { get; private set; }
-        public PlayerState PlayerState { get; private set; }
+        public PlayerState PlayerState { get; } = new PlayerState();
         public GameSettings Settings => settings;
 
         private void Awake()
@@ -35,7 +35,6 @@ namespace Main
             if (Shared == null)
             {
                 Shared = this;
-                PlayerState = new PlayerState();
             }
             else
             {
@@ -64,6 +63,18 @@ namespace Main
                 throw new Exception("Player is already spawned");
             }
             Player = _player;
+        }
+
+        public void OnPlayerDestroyed(IPlayer _player)
+        {
+            if (Player == _player)
+            {
+                Player = null;
+            }
+            else
+            {
+                throw new Exception("Trying to destroy a player that is not the current player");
+            }
         }
 
         private IEnumerator SpawnBeansRoutine()
