@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   gameTimeSec: 40
-  beanPrefab: {fileID: 7023765879481593722, guid: ee0985b1a659a4d0bbfffe35c55cab56, type: 3}
+  beanPrefabs:
+  - {fileID: 3205991919935867655, guid: 2fdeefaff904643e19a6355cc15bdd9c, type: 3}
+  - {fileID: 1944676216339087392, guid: f0500d00975b14932bca181d7975dcf7, type: 3}
+  - {fileID: 8300308145250064502, guid: 4728203e2b06f4618ba0de42cbfbd6f3, type: 3}
+  - {fileID: 2188434847455760964, guid: 43741b293719544c4ad1572ec86725c6, type: 3}
+  - {fileID: 7023765879481593722, guid: ee0985b1a659a4d0bbfffe35c55cab56, type: 3}
   maxBeanCount: 30
   beanSpawnRadius: 15
   beanSpawnInterval: 0.3

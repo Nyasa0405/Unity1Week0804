@@ -140,12 +140,13 @@ namespace Main
 
         private void SpawnBean()
         {
-            if (settings.BeanPrefab == null) return;
+            if (settings.BeanPrefabs == null || settings.BeanPrefabs.Count == 0) return;
 
             Vector3 spawnPosition = GetRandomNavMeshPosition();
+            var beanPrefab = settings.BeanPrefabs[Random.Range(0, settings.BeanPrefabs.Count)];
             if (spawnPosition != Vector3.zero)
             {
-                GameObject beanObject = Instantiate(settings.BeanPrefab, spawnPosition, Quaternion.identity);
+                GameObject beanObject = Instantiate(beanPrefab, spawnPosition, Quaternion.identity);
 
                 ICoffeeBean coffeeBean = beanObject.GetComponent<ICoffeeBean>();
                 if (coffeeBean != null)
