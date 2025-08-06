@@ -16,7 +16,8 @@ jobs:
 
     steps:
       - name: Trigger Unity Cloud Build manually
-        uses: Matuyuhi/unity-cloud-build-action@v0.2.4
+        id: trigger-build
+        uses: Matuyuhi/unity-cloud-build-action@v0.2.5
         with:
           unity_org_id: ${{ secrets.UNITY_ORG_ID }}
           unity_project_id: ${{ secrets.UNITY_PROJECT_ID }}
@@ -24,3 +25,8 @@ jobs:
           authorization_header: ${{ secrets.UNITY_AUTH_HEADER }}
           commit_sha: ${{ github.event.inputs.commit_sha }}
           branch: ${{ github.event.inputs.branch }}
+      - name: response with github summary
+        run: |
+          echo "Build triggered successfully!" >> "$GITHUB_STEP_SUMMARY"
+          echo "Build ID: ${{ steps.trigger-build.outputs.build_id }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit SHA: ${{ steps.trigger-build.outputs.commit }}" >> "$GITHUB_STEP_SUMMARY"
