@@ -9,6 +9,7 @@ namespace Player
     [RequireComponent(typeof(Rigidbody))]
     public class CarController : MonoBehaviour, IPlayer
     {
+        private static readonly int RotatePowerRef = Shader.PropertyToID("_RotatePower");
         /// <summary>
         ///     車の最大前方速度（メートル/秒）。
         /// </summary>
@@ -64,20 +65,20 @@ namespace Player
         private float frontWheelGrip = 0.8f; // 前輪グリップ
 
         [Header("Mill Rotation Settings"), SerializeField]
-        private Transform millTransform;
+        private Material millMaterial; // ミルのマテリアル
 
-        [Tooltip("前進時のミル回転速度（度/秒）"), SerializeField]
-        private float forwardMillRotationSpeed = 30f;
+        [Tooltip("前進時のミル回転速度（0-1）"), SerializeField, Range(0f, 1f)]
+        private float forwardMillRotationPower = 0.1f;
 
-        [Tooltip("旋回時のミル回転速度（度/秒）"), SerializeField]
-        private float steeringMillRotationSpeed = 120f;
+        [Tooltip("旋回時のミル回転速度（0-1）"), SerializeField, Range(0f, 1f)]
+        private float steeringMillRotationPower = 0.4f;
 
-        [Tooltip("ドリフト時のミル回転速度（度/秒）"), SerializeField]
-        private float driftMillRotationSpeed = 360f;
+        [Tooltip("ドリフト時のミル回転速度（0-1）"), SerializeField, Range(0f, 1f)]
+        private float driftMillRotationPower = 0.6f;
 
         [Tooltip("ミル回転の減衰速度"), SerializeField]
         private float millRotationDecay = 5f;
-        private float currentMillRotationSpeed;
+        private float currentMillRotationPower;
         private float currentSpeed;
         private float grindTimer;
         private bool isDrifting;
@@ -283,45 +284,54 @@ namespace Player
 
         private void UpdateMillRotation()
         {
-            float targetRotationSpeed = 0f;
+            float targetRotationPower = 0f;
             float speed = rb.linearVelocity.magnitude;
 
             if (isDrifting)
             {
                 // ドリフト時は最高速度で回転
-                targetRotationSpeed = driftMillRotationSpeed;
+                targetRotationPower = driftMillRotationPower;
             }
             else if (Mathf.Abs(steeringInput) > 0.1f && speed > 1f)
             {
                 // 旋回時
-                targetRotationSpeed = steeringMillRotationSpeed * Mathf.Abs(steeringInput);
+                targetRotationPower = steeringMillRotationPower * Mathf.Abs(steeringInput);
             }
             else if (throttleInput > 0.1f && speed > 0.5f)
             {
                 // 前進時
-                targetRotationSpeed = forwardMillRotationSpeed * throttleInput;
+                targetRotationPower = forwardMillRotationPower * throttleInput;
             }
 
-            // 回転速度の滑らかな変化
-            currentMillRotationSpeed = Mathf.Lerp(currentMillRotationSpeed, targetRotationSpeed, Time.fixedDeltaTime * millRotationDecay);
-
-            // ミルの回転を適用
-            if (millTransform != null && currentMillRotationSpeed > 0.1f)
+            // 回転パワーの滑らかな変化
+            currentMillRotationPower = Mathf.Lerp(currentMillRotationPower, targetRotationPower, Time.fixedDeltaTime * millRotationDecay);
+            
+            // 極小値を0に丸める（浮動小数点数の精度問題を解決）
+            if (Mathf.Abs(currentMillRotationPower) < 0.001f)
             {
-                millTransform.Rotate(0f, currentMillRotationSpeed * Time.fixedDeltaTime, 0f, Space.Self);
+                currentMillRotationPower = 0f;
+            }
+            
+            // 小数点第3位以下を切り捨て
+            currentMillRotationPower = Mathf.Floor(currentMillRotationPower * 100f) / 100f;
+
+            // シェーダーのRotatePowerプロパティに値を設定
+            if (millMaterial != null)
+            {
+                millMaterial.SetFloat(RotatePowerRef, currentMillRotationPower);
             }
         }
 
         private void HandleGrinding()
         {
             // ミルが回転している時は豆を挽く
-            if (currentMillRotationSpeed > GamePlayMode.Shared.Settings.MinMillRotationForGrinding &&
+            if (currentMillRotationPower > GamePlayMode.Shared.Settings.MinMillRotationForGrinding &&
                 GamePlayMode.Shared.PlayerState.GroundBeans > 0)
             {
                 grindTimer += Time.fixedDeltaTime;
 
-                // ミルの回転速度に応じて挽くスピードを変える
-                float grindSpeedMultiplier = currentMillRotationSpeed / 100f; // 100度/秒を基準とする
+                // ミルの回転パワーに応じて挽くスピードを変える
+                float grindSpeedMultiplier = currentMillRotationPower; // 0-1の値をそのまま使用
                 float grindInterval = 1f / (GamePlayMode.Shared.Settings.BaseMillGrindSpeed * grindSpeedMultiplier);
 
                 if (grindTimer >= grindInterval)
