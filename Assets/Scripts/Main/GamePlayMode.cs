@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Component;
 using Interface;
 using Model;
 using Unity.AI.Navigation;
@@ -192,6 +193,20 @@ namespace Main
                 }
             }
             return false;
+        }
+
+        public void OnCrushBeanEffect(ICoffeeBean _bean)
+        {
+            var obj = Instantiate(settings.CrushBeanEffectPrefab, _bean.Transform.position, Quaternion.identity);
+            CrushBeanEffectPlayer effectPlayer = obj.GetComponent<CrushBeanEffectPlayer>();
+            if (effectPlayer != null)
+            {
+                effectPlayer.Play(_bean, Player);
+            }
+            else
+            {
+                Debug.LogWarning("CrushBeanEffectPlayer component not found on the effect prefab.");
+            }
         }
 
         public void OnBeanDestroyed(ICoffeeBean _bean)

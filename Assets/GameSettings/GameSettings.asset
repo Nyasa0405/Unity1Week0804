@@ -17,6 +17,9 @@ MonoBehaviour:
   maxBeanCount: 30
   beanSpawnRadius: 15
   beanSpawnInterval: 0.3
+  crushBeanEffectPrefab: {fileID: 40992636644726091, guid: 297dc4218d0439146a1bf4463ac45e20, type: 3}
+  crushBaseDiffusion: 2.2
+  crushDiffusionByPlayerSpeedRate: 5
   maxGroundBeans: 20
   maxGroundCoffee: 10
   baseMillGrindSpeed: 2
