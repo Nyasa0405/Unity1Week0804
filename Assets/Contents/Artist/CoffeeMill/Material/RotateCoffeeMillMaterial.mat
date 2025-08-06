@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CoffeeMillMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: f94b334f1d78dd340be0ef3f049746db, type: 3}
+  m_Name: RotateCoffeeMillMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: 971f8d6f603cf684f9eda22034d786c8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -132,6 +132,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
+    - _DegreesPerSecond: 999
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -151,6 +152,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RotatePower: 1
     - _Smoothness: 0.5
     - _SmoothnessStrength: 0.65
     - _SmoothnessTextureChannel: 0
@@ -169,6 +171,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmmisionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _RotateAxis: {r: 0, g: 1, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
