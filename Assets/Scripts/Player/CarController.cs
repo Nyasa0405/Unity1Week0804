@@ -105,6 +105,16 @@ namespace Player
             GamePlayMode.Shared.OnPlayerSpawn(this);
         }
 
+        private void OnDestroy()
+        {
+            if (inputActions != null)
+            {
+                inputActions.Disable();
+                inputActions.Dispose();
+            }
+            GamePlayMode.Shared.OnPlayerDestroyed(this);
+        }
+
         private void FixedUpdate()
         {
             // 入力を取得: 縦(forward/back)と横(left/right)
