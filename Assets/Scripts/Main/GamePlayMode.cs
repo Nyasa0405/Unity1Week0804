@@ -23,8 +23,17 @@ namespace Main
         public List<ICoffeeBean> Beans = new List<ICoffeeBean>();
 
         private Transform spawnCenter;
-
         private Coroutine spawnCoroutine;
+        private Coroutine gameTimerCoroutine;
+        
+        // ゲーム状態管理
+        public bool IsGameActive { get; private set; } = true;
+        public float RemainingTime { get; private set; }
+        
+        // イベント
+        public event Action<float> OnTimeChanged;
+        public event Action OnGameEnded;
+        
         public static GamePlayMode Shared { get; private set; }
         public IPlayer Player { get; private set; }
         public PlayerState PlayerState { get; } = new PlayerState();
@@ -47,13 +56,52 @@ namespace Main
             if (spawnCenter == null)
                 spawnCenter = transform;
 
+            RemainingTime = settings.GameTimeSec;
             spawnCoroutine = StartCoroutine(SpawnBeansRoutine());
+            gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
         }
 
         private void OnDestroy()
         {
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
+            if (gameTimerCoroutine != null)
+                StopCoroutine(gameTimerCoroutine);
+        }
+
+        private IEnumerator GameTimerRoutine()
+        {
+            while (IsGameActive && RemainingTime > 0f)
+            {
+                yield return new WaitForSeconds(1f);
+                RemainingTime -= 1f;
+                OnTimeChanged?.Invoke(RemainingTime);
+                
+                if (RemainingTime <= 0f)
+                {
+                    EndGame();
+                }
+            }
+        }
+
+        private void EndGame()
+        {
+            IsGameActive = false;
+            Time.timeScale = 0f; // ゲームを一時停止
+            OnGameEnded?.Invoke();
+        }
+
+        public void RestartGame()
+        {
+            Time.timeScale = 1f;
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        }
+
+        public void ReturnToTitle()
+        {
+            Time.timeScale = 1f;
+            // タイトルシーンに戻る（シーン名は適宜変更してください）
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
         }
 
         public void OnPlayerSpawn(IPlayer _player)

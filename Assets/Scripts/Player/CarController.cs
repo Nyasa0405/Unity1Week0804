@@ -118,6 +118,14 @@ namespace Player
 
         private void FixedUpdate()
         {
+            // ゲームが終了している場合は入力を無効化
+            if (!GamePlayMode.Shared.IsGameActive)
+            {
+                throttleInput = 0f;
+                steeringInput = 0f;
+                return;
+            }
+            
             // 入力を取得: 縦(forward/back)と横(left/right)
             var moveValue = moveAction.ReadValue<Vector2>();
             throttleInput = moveValue.y; // 縦軸の入力（前進/後退）
