@@ -1493,28 +1493,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 256758857110175312, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 256758857110175312, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 256758857110175312, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 329795367685025602, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
       propertyPath: m_Name
       value: GameCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 1027703841887880524, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3026363443643208376, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
-      propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3026363443643208376, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}

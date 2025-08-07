@@ -35,7 +35,7 @@ namespace Main
         [Header("Gameplay Settings"), SerializeField]
          private float crushRadius = 1.5f; // 豆を轢く判定の範囲
         [SerializeField] private float spillSpeedThreshold = 5f; // 衝突時のこぼれ判定速度
-        [SerializeField] private float minMillRotationForGrinding = 30f; // 挽くための最小ミル回転速度を下げる
+        [SerializeField] private float minMillRotationForGrinding = 0.01f; // 挽くための最小ミル回転速度を下げる
 
         public float GameTimeSec => gameTimeSec;
         public List<GameObject> BeanPrefabs => beanPrefabs;
