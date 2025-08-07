@@ -10,9 +10,8 @@ using Random = UnityEngine.Random;
 namespace Component
 {
     [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Collider))]
-    public class CoffeeBeanAgent : MonoBehaviour, ICoffeeBean
+    public class CoffeeBeanMovement : MonoBehaviour, ICoffeeBean
     {
-
         [Header("Roaming Settings"), SerializeField]
          private float roamRadius = 10f; // Radius for roaming wander
         [SerializeField] private float roamInterval = 3f; // Time between roam destinations
@@ -180,6 +179,22 @@ namespace Component
             }
             // 徘徊 Coroutine を開始
             roamCoroutine = StartCoroutine(RoamRoutine());
+        }
+
+        private void OnTriggerEnter(Collider _other)
+        {
+            // 豆を轢く判定
+            IPlayer player = _other.GetComponent<IPlayer>();
+            if (player != null)
+            {
+                GamePlayMode.Shared.OnCrushBeanEffect(this);
+                // 豆を轢いた処理（スコア加算なし）
+                GamePlayMode.Shared.PlayerState.CrushBean();
+                // 轢いた豆を削除
+                GamePlayMode.Shared.OnBeanDestroyed(this);
+
+                Destroy(gameObject);
+            }
         }
 
         private enum State { Roaming, Fleeing, Cohesion }
