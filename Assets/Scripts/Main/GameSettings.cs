@@ -25,7 +25,7 @@ namespace Main
          private int maxGroundBeans = 20; // 轢いた豆の最大数を調整
         [SerializeField] private int maxGroundCoffee = 10; // 挽いたコーヒーの最大数を調整
         [SerializeField] private float baseMillGrindSpeed = 2f; // 基本の挽く速度（豆/秒）
-        [SerializeField] private float spillSpeed = 2f; // こぼれる速度を調整
+        [SerializeField] private float spillInterval = 0.5f; // こぼれ判定の間隔を調整
 
         [Header("Score Settings"), SerializeField]
          private int scorePerGroundCoffee = 100; // 挽いたコーヒーが満タンになった時のスコア
@@ -45,7 +45,7 @@ namespace Main
         public int MaxGroundBeans => maxGroundBeans;
         public int MaxGroundCoffee => maxGroundCoffee;
         public float BaseMillGrindSpeed => baseMillGrindSpeed;
-        public float SpillSpeed => spillSpeed;
+        public float SpillInterval => spillInterval;
         public int ScorePerGroundCoffee => scorePerGroundCoffee;
         public float SpillSpeedThreshold => spillSpeedThreshold;
         public float MinMillRotationForGrinding => minMillRotationForGrinding;

@@ -11,14 +11,14 @@ using Random = UnityEngine.Random;
 
 namespace Main
 {
-    public class GamePlayMode : MonoBehaviour
+    public partial class GamePlayMode: MonoBehaviour
     {
 
-        [Header("Game Settings"), SerializeField]
-         private GameSettings settings;
+        [Header("Game Settings")]
+        [SerializeField] private GameSettings settings;
 
-        [Header("Spawn Settings"), SerializeField]
-         private NavMeshSurface navMeshSurface;
+        [Header("Spawn Settings")]
+        [SerializeField] private NavMeshSurface navMeshSurface;
         [SerializeField] private LayerMask spawnLayerMask = 1;
 
         public List<ICoffeeBean> Beans = new List<ICoffeeBean>();
@@ -39,6 +39,7 @@ namespace Main
         public IPlayer Player { get; private set; }
         public PlayerState PlayerState { get; } = new PlayerState();
         public GameSettings Settings => settings;
+        public SoundSettings SoundSettings => soundSettings;
 
         private void Awake()
         {
