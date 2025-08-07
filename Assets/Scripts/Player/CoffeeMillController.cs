@@ -65,7 +65,7 @@ namespace Player
         private float frontWheelGrip = 0.8f; // 前輪グリップ
 
         [Header("Mill Rotation Settings"), SerializeField]
-        private Material millMaterial; // ミルのマテリアル
+        private Transform millTransform;
 
         [Tooltip("前進時のミル回転速度（0-1）"), SerializeField, Range(0f, 1f)]
         private float forwardMillRotationPower = 0.1f;
@@ -313,10 +313,11 @@ namespace Player
             // 小数点第3位以下を切り捨て
             currentMillRotationPower = Mathf.Floor(currentMillRotationPower * 100f) / 100f;
 
-            // シェーダーのRotatePowerプロパティに値を設定
-            if (millMaterial != null)
+            // millの回転を更新
+            if (millTransform != null)
             {
-                millMaterial.SetFloat(RotatePowerRef, currentMillRotationPower);
+                Debug.Log(currentMillRotationPower);
+                millTransform.Rotate(Vector3.up, currentMillRotationPower * 360f * Time.fixedDeltaTime, Space.Self);
             }
         }
 
