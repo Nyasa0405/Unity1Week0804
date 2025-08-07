@@ -9,14 +9,13 @@ namespace Model
         public int GroundCoffee { get; private set; }
         public int Score { get; private set; }
         public bool IsGrinding { get; set; } = false;
-        public bool IsSpilling { get; set; } = false;
 
         public void AddGroundBeans(int _amount)
         {
             GroundBeans = Mathf.Min(GroundBeans + _amount, GamePlayMode.Shared.Settings.MaxGroundBeans);
         }
 
-        public void AddGroundCoffee(int _amount)
+        public void AddGroundCoffee(int _amount, AudioSource _audioSource)
         {
             GroundCoffee = Mathf.Min(GroundCoffee + _amount, GamePlayMode.Shared.Settings.MaxGroundCoffee);
 
@@ -25,6 +24,9 @@ namespace Model
             {
                 Score += GamePlayMode.Shared.Settings.ScorePerGroundCoffee;
                 GroundCoffee = 0;
+                
+                // コーヒー完成時の音を再生
+                GamePlayMode.Shared.PlayMakeCoffeeSound(_audioSource);
             }
         }
 

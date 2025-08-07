@@ -187,6 +187,7 @@ namespace Component
             IPlayer player = _other.GetComponent<IPlayer>();
             if (player != null)
             {
+                GamePlayMode.Shared.PlayBeansBreakSound(transform);
                 GamePlayMode.Shared.OnCrushBeanEffect(this);
                 // 豆を轢いた処理（スコア加算なし）
                 GamePlayMode.Shared.PlayerState.CrushBean();
