@@ -89,10 +89,10 @@ MonoBehaviour:
   driftFactor: 0.85
   rearWheelSlip: 0.3
   frontWheelGrip: 0.8
-  millMaterial: {fileID: 2100000, guid: 3d9d61939420b274c98dae121913e7cf, type: 2}
-  forwardMillRotationPower: 0.262
-  steeringMillRotationPower: 0.529
-  driftMillRotationPower: 0.779
+  millTransform: {fileID: 3016825983127795375}
+  forwardMillRotationPower: 0.167
+  steeringMillRotationPower: 0.801
+  driftMillRotationPower: 0.92
   millRotationDecay: 5
 --- !u!136 &6224940573254808450
 CapsuleCollider:
@@ -177,5 +177,10 @@ PrefabInstance:
 --- !u!4 &1870463477175852035 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7206633841390384754, guid: 97c1c4b1a0b5eb945925b6e83e6ccf74, type: 3}
+  m_PrefabInstance: {fileID: 9076481494801279601}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3016825983127795375 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6065162239081012446, guid: 97c1c4b1a0b5eb945925b6e83e6ccf74, type: 3}
   m_PrefabInstance: {fileID: 9076481494801279601}
   m_PrefabAsset: {fileID: 0}
