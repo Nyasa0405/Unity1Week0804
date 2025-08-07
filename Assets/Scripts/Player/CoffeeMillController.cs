@@ -9,7 +9,6 @@ namespace Player
     [RequireComponent(typeof(Rigidbody))]
     public class CoffeeMillController : MonoBehaviour, IPlayer
     {
-        private static readonly int RotatePowerRef = Shader.PropertyToID("_RotatePower");
         /// <summary>
         ///     車の最大前方速度（メートル/秒）。
         /// </summary>
@@ -76,16 +75,23 @@ namespace Player
         [Tooltip("ドリフト時のミル回転速度（0-1）"), SerializeField, Range(0f, 1f)]
         private float driftMillRotationPower = 0.6f;
 
+        [Header("Audio Settings")]
+        [SerializeField] private AudioSource mainAudioSource; // メインのAudioSource（効果音用）
+        [SerializeField] private AudioSource millAudioSource; // ミル専用のAudioSource
+
+
         [Tooltip("ミル回転の減衰速度"), SerializeField]
         private float millRotationDecay = 5f;
         private float currentMillRotationPower;
         private float currentSpeed;
+        private float lastSpeed;
         private float grindTimer;
         private bool isDrifting;
         private Vector3 lastVelocity;
+        private bool wasMillRotating = false; // 前フレームでミルが回転していたか
 
         private Rigidbody rb;
-        private float spillTimer;
+        private float lastSpillTime;
         private float steeringInput;
         private float throttleInput;
         private InputSystem_Actions inputActions;
@@ -104,6 +110,36 @@ namespace Player
 
             inputActions.Enable();
             GamePlayMode.Shared.OnPlayerSpawn(this);
+            GamePlayMode.Shared.OnGameEnded += () =>
+            {
+                // ゲーム終了時にミルの回転を停止
+                if (millAudioSource != null)
+                {
+                    GamePlayMode.Shared.StopMillSound(millAudioSource);
+                }
+            };
+
+            // メインAudioSource（効果音用）
+            if (mainAudioSource == null)
+            {
+                mainAudioSource = GetComponent<AudioSource>();
+                if (mainAudioSource == null)
+                {
+                    throw new System.Exception("Main AudioSource is not assigned and no AudioSource component found on the player.");
+                }
+            }
+
+            // ミル専用AudioSource
+            if (millAudioSource == null)
+            {
+                millAudioSource = gameObject.AddComponent<AudioSource>();
+                if (millAudioSource == null)
+                {
+                    throw new System.Exception("Mill AudioSource is not assigned and could not be created.");
+                }
+                millAudioSource.loop = false;
+                millAudioSource.playOnAwake = false;
+            }
         }
 
         private void OnDestroy()
@@ -130,6 +166,8 @@ namespace Player
             var moveValue = moveAction.ReadValue<Vector2>();
             throttleInput = moveValue.y; // 縦軸の入力（前進/後退）
             steeringInput = moveValue.x; // 横軸の入力（左/右）
+
+            lastSpeed = currentSpeed;
             currentSpeed = rb.linearVelocity.magnitude;
 
             HandleSteering();
@@ -137,23 +175,9 @@ namespace Player
             HandleDeceleration();
             HandleDrift();
             UpdateMillRotation();
+            HandleMillSound(); // ミル音の制御を追加
             HandleGrinding();
             HandleSpilling();
-        }
-
-        private void OnCollisionEnter(Collision _collision)
-        {
-            // 高速衝突時のこぼれ判定
-            if (currentSpeed > GamePlayMode.Shared.Settings.SpillSpeedThreshold)
-            {
-                GamePlayMode.Shared.PlayerState.IsSpilling = true;
-            }
-        }
-
-        private void OnCollisionExit(Collision _collision)
-        {
-            // 衝突終了時はこぼれを停止
-            GamePlayMode.Shared.PlayerState.IsSpilling = false;
         }
 
         public Transform Transform => transform;
@@ -316,8 +340,33 @@ namespace Player
             // millの回転を更新
             if (millTransform != null)
             {
-                Debug.Log(currentMillRotationPower);
                 millTransform.Rotate(Vector3.up, currentMillRotationPower * 360f * Time.fixedDeltaTime, Space.Self);
+            }
+        }
+
+        private void HandleMillSound()
+        {
+            bool isCurrentlyRotating = currentMillRotationPower > 0.001f;
+            
+            // ミル回転状態が変わった時のみ音を制御
+            if (isCurrentlyRotating && !wasMillRotating)
+            {
+                // ミル回転開始
+                GamePlayMode.Shared.StartMillSound(millAudioSource);
+            }
+            else if (!isCurrentlyRotating && wasMillRotating)
+            {
+                // ミル回転停止
+                GamePlayMode.Shared.StopMillSound(millAudioSource);
+            }
+            
+            wasMillRotating = isCurrentlyRotating;
+
+            var rate = GamePlayMode.Shared.Player.Speed / GamePlayMode.Shared.Player.MaxSpeed;
+            var addPitch = Mathf.Clamp((rate - 0.7f) / 0.3f, 0f, 1f);
+            if (millAudioSource != null)
+            {
+                millAudioSource.pitch = 1f + addPitch * 0.7f;
             }
         }
 
@@ -337,7 +386,7 @@ namespace Player
                 {
                     int beansToGrind = Mathf.Min(1, GamePlayMode.Shared.PlayerState.GroundBeans);
                     GamePlayMode.Shared.PlayerState.ConsumeGroundBeans(beansToGrind);
-                    GamePlayMode.Shared.PlayerState.AddGroundCoffee(beansToGrind);
+                    GamePlayMode.Shared.PlayerState.AddGroundCoffee(beansToGrind, mainAudioSource);
                     grindTimer = 0f;
                 }
             }
@@ -350,20 +399,14 @@ namespace Player
         private void HandleSpilling()
         {
             // 高速衝突時はコーヒーがこぼれる
-            if (GamePlayMode.Shared.PlayerState.IsSpilling)
+            if (
+                lastSpeed > GamePlayMode.Shared.Settings.SpillSpeedThreshold
+                && currentSpeed <= 0.2f
+                && lastSpillTime < Time.time + GamePlayMode.Shared.Settings.SpillInterval)
             {
-                spillTimer += Time.fixedDeltaTime;
-                float spillInterval = 1f / GamePlayMode.Shared.Settings.SpillSpeed;
-
-                if (spillTimer >= spillInterval)
-                {
-                    GamePlayMode.Shared.PlayerState.RemoveGroundCoffee(1);
-                    spillTimer = 0f;
-                }
-            }
-            else
-            {
-                spillTimer = 0f;
+                GamePlayMode.Shared.PlayHitObstacleSound(transform);
+                GamePlayMode.Shared.PlayerState.RemoveGroundCoffee(1);
+                lastSpillTime = Time.time;
             }
         }
     }

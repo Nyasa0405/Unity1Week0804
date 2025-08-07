@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da87eff57e16421ab2bbb6097f49e414, type: 3}
+  m_Name: SoundSettings
+  m_EditorClassIdentifier: 
+  beansBreak:
+  - {fileID: 8300000, guid: 6c25bac61c89d7d4ca009ecbcff74a88, type: 3}
+  hitObstacle:
+  - {fileID: 8300000, guid: b5ea8c4cb56ed154e94f9241724531d0, type: 3}
+  makeCoffee:
+  - {fileID: 8300000, guid: f186c077b74ccd1499f7c66164a9eb0f, type: 3}
+  mill:
+  - {fileID: 8300000, guid: 311ec0bb3096644448ec2017ed8040bc, type: 3}
