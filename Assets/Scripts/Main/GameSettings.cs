@@ -11,7 +11,6 @@ namespace Main
         [Header("Bean Settings"), SerializeField]
         private List<GameObject> beanPrefabs;
         [SerializeField] private int maxBeanCount = 30; // フィールドの豆の数を6-10個に調整
-        [SerializeField] private float beanSpawnRadius = 15f;
         [SerializeField] private float beanSpawnInterval = 0.3f; // スポーン間隔を長く
 
         [Header("Bean Crush Settings"), SerializeField]
@@ -30,8 +29,7 @@ namespace Main
          private int scorePerGroundCoffee = 100; // 挽いたコーヒーが満タンになった時のスコア
 
         [Header("Gameplay Settings"), SerializeField]
-         private float crushRadius = 1.5f; // 豆を轢く判定の範囲
-        [SerializeField] private float spillSpeedThreshold = 5f; // 衝突時のこぼれ判定速度
+        private float spillSpeedThreshold = 5f; // 衝突時のこぼれ判定速度
         [SerializeField] private float minMillRotationForGrinding = 0.01f; // 挽くための最小ミル回転速度を下げる
 
         public float GameTimeSec => gameTimeSec;
