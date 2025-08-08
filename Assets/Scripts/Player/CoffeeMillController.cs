@@ -154,11 +154,17 @@ namespace Player
 
             if (throttleInput > 0 && forwardVel < maxSpeed)
             {
+                // 前進時
                 rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
             }
             else if (throttleInput < 0)
             {
-                rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
+                // 後退時：最大速度を制限
+                float backwardMaxSpeed = maxSpeed * 0.4f; // 前進速度の40%
+                if (forwardVel > -backwardMaxSpeed)
+                {
+                    rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
+                }
             }
         }
 
