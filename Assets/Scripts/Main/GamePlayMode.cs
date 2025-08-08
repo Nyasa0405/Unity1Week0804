@@ -161,8 +161,6 @@ namespace Main
         private Vector3 GetRandomNavMeshPosition()
         {
             Vector3? spawnPoint;
-            int attempts = 0;
-            const int maxAttempts = 30;
 
             if (spawnPoints == null || spawnPoints.Count == 0)
             {

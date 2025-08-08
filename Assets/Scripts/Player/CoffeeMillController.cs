@@ -33,6 +33,8 @@ namespace Player
         private bool wasMillRotating = false;
         private float lastSteeringInput;
         private float steeringSpeed; // 旋回速度
+        private float currentAngularVelocity; // 現在の角速度
+        private float targetAngularVelocity; // 目標角速度
 
         private Rigidbody rb;
         private float steeringInput;
@@ -43,7 +45,7 @@ namespace Player
         // 自動計算される値
         private float lowSpeedThreshold => maxSpeed * 0.2f; // 最大速度の20%
         private float driftSpeedThreshold => maxSpeed * 0.3f; // 最大速度の30%
-        private float minSteeringSpeed => maxSpeed * 0.05f; // 最大速度の5%
+        private float minSteeringSpeed => maxSpeed * 0.1f; // 最大速度の1%
 
         private void Start()
         {
@@ -152,11 +154,17 @@ namespace Player
 
             if (throttleInput > 0 && forwardVel < maxSpeed)
             {
+                // 前進時
                 rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
             }
             else if (throttleInput < 0)
             {
-                rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
+                // 後退時：最大速度を制限
+                float backwardMaxSpeed = maxSpeed * 0.4f; // 前進速度の40%
+                if (forwardVel > -backwardMaxSpeed)
+                {
+                    rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
+                }
             }
         }
 
@@ -186,18 +194,30 @@ namespace Player
         private void HandleSteering()
         {
             // 静止時または極低速時のステアリング制限
-            if (currentSpeed < minSteeringSpeed)
+            if (currentSpeed < minSteeringSpeed || Mathf.Abs(steeringInput) < 0.01f)
             {
+                // 入力がない時は回転を強く減衰
+                currentAngularVelocity = Mathf.Lerp(currentAngularVelocity, 0f, Time.fixedDeltaTime * 15f);
                 return;
             }
 
             // 速度に応じたステアリング調整
             float speedFactor = Mathf.Lerp(1.5f, 0.2f, currentSpeed / maxSpeed);
-            float throttleFactor = 1f - Mathf.Abs(throttleInput) * 0.5f;
 
-            float steerAmount = steeringInput * maxSteerAngle * speedFactor * throttleFactor;
-            Quaternion deltaRot = Quaternion.Euler(0f, steerAmount * Time.fixedDeltaTime, 0f);
-            rb.MoveRotation(rb.rotation * deltaRot);
+            // 目標角速度を計算
+            targetAngularVelocity = steeringInput * maxSteerAngle * speedFactor * 0.1f;
+
+            // 角速度の滑らかな変化（慣性を保持）
+            currentAngularVelocity = Mathf.Lerp(currentAngularVelocity, targetAngularVelocity, Time.fixedDeltaTime * 2f);
+
+            if (throttleInput < 0f) {
+                // 後退時はステアリングを弱く
+               currentAngularVelocity *= 0.7f;
+            }
+
+            // 回転力を加える（慣性を保持）- 力を調整
+            Vector3 torque = Vector3.up * (currentAngularVelocity * 0.01f); // 力を0.1倍に調整
+            rb.AddTorque(torque, ForceMode.VelocityChange);
         }
 
         private void HandleDrift()
@@ -207,7 +227,7 @@ namespace Player
 
             // ドリフト条件の判定（より厳密に）
             bool shouldDrift = currentSpeed > driftSpeedThreshold &&
-                               lateralSpeed > currentSpeed * 0.2f && // 閾値を下げる
+                               lateralSpeed > currentSpeed * 0.05f && // 閾値を下げる
                                Mathf.Abs(steeringInput) > 0.3f && // ステアリング閾値を上げる
                                throttleInput > 0.2f; // アクセル閾値を上げる
 
@@ -295,12 +315,12 @@ namespace Player
             
             wasMillRotating = isCurrentlyRotating;
 
-            // 速度に応じたピッチ調整
-            var rate = currentSpeed / maxSpeed;
-            var addPitch = Mathf.Clamp((rate - 0.7f) / 0.3f, 0f, 1f);
+            // ミル回転パワーに応じたピッチ調整
             if (millAudioSource != null)
             {
-                millAudioSource.pitch = 1f + addPitch * 0.7f;
+                // 回転パワー（0-1）に基づいてピッチを調整
+                float pitchMultiplier = 0.8f + (currentMillRotationPower * 1.2f); // 0.5倍から2.0倍の範囲
+                millAudioSource.pitch = pitchMultiplier;
             }
         }
 
