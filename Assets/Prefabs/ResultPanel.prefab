@@ -258,7 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resultPanel: {fileID: 5142383978584827225}
   scoreText: {fileID: 3925637028174275981}
-  groundBeansText: {fileID: 3925637028174275981}
+  groundBeansText: {fileID: 42919065524342522}
   groundCoffeeText: {fileID: 5440486751991700676}
   restartButton: {fileID: 431878125271491844}
   titleButton: {fileID: 2260999513212069247}
