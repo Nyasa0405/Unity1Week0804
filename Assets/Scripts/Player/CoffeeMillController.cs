@@ -207,7 +207,7 @@ namespace Player
 
             // ドリフト条件の判定（より厳密に）
             bool shouldDrift = currentSpeed > driftSpeedThreshold &&
-                               lateralSpeed > currentSpeed * 0.2f && // 閾値を下げる
+                               lateralSpeed > currentSpeed * 0.05f && // 閾値を下げる
                                Mathf.Abs(steeringInput) > 0.3f && // ステアリング閾値を上げる
                                throttleInput > 0.2f; // アクセル閾値を上げる
 
