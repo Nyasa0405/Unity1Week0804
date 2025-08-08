@@ -33,6 +33,8 @@ namespace Player
         private bool wasMillRotating = false;
         private float lastSteeringInput;
         private float steeringSpeed; // 旋回速度
+        private float currentAngularVelocity; // 現在の角速度
+        private float targetAngularVelocity; // 目標角速度
 
         private Rigidbody rb;
         private float steeringInput;
@@ -43,7 +45,7 @@ namespace Player
         // 自動計算される値
         private float lowSpeedThreshold => maxSpeed * 0.2f; // 最大速度の20%
         private float driftSpeedThreshold => maxSpeed * 0.3f; // 最大速度の30%
-        private float minSteeringSpeed => maxSpeed * 0.05f; // 最大速度の5%
+        private float minSteeringSpeed => maxSpeed * 0.0001f; // 最大速度の1%
 
         private void Start()
         {
@@ -195,8 +197,14 @@ namespace Player
             float speedFactor = Mathf.Lerp(1.5f, 0.2f, currentSpeed / maxSpeed);
             float throttleFactor = 1f - Mathf.Abs(throttleInput) * 0.5f;
 
-            float steerAmount = steeringInput * maxSteerAngle * speedFactor * throttleFactor;
-            Quaternion deltaRot = Quaternion.Euler(0f, steerAmount * Time.fixedDeltaTime, 0f);
+            // 目標角速度を計算
+            targetAngularVelocity = steeringInput * maxSteerAngle * speedFactor * throttleFactor;
+
+            // 角速度の滑らかな変化（慣性を保持）
+            currentAngularVelocity = Mathf.Lerp(currentAngularVelocity, targetAngularVelocity, Time.fixedDeltaTime * 3f);
+
+            // 回転を適用
+            Quaternion deltaRot = Quaternion.Euler(0f, currentAngularVelocity * Time.fixedDeltaTime, 0f);
             rb.MoveRotation(rb.rotation * deltaRot);
         }
 
@@ -295,12 +303,12 @@ namespace Player
             
             wasMillRotating = isCurrentlyRotating;
 
-            // 速度に応じたピッチ調整
-            var rate = currentSpeed / maxSpeed;
-            var addPitch = Mathf.Clamp((rate - 0.7f) / 0.3f, 0f, 1f);
+            // ミル回転パワーに応じたピッチ調整
             if (millAudioSource != null)
             {
-                millAudioSource.pitch = 1f + addPitch * 0.7f;
+                // 回転パワー（0-1）に基づいてピッチを調整
+                float pitchMultiplier = 0.8f + (currentMillRotationPower * 1.2f); // 0.5倍から2.0倍の範囲
+                millAudioSource.pitch = pitchMultiplier;
             }
         }
 
