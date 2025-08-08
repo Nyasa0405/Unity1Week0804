@@ -45,7 +45,7 @@ namespace Player
         // 自動計算される値
         private float lowSpeedThreshold => maxSpeed * 0.2f; // 最大速度の20%
         private float driftSpeedThreshold => maxSpeed * 0.3f; // 最大速度の30%
-        private float minSteeringSpeed => maxSpeed * 0.0001f; // 最大速度の1%
+        private float minSteeringSpeed => maxSpeed * 0.1f; // 最大速度の1%
 
         private void Start()
         {
@@ -194,24 +194,30 @@ namespace Player
         private void HandleSteering()
         {
             // 静止時または極低速時のステアリング制限
-            if (currentSpeed < minSteeringSpeed)
+            if (currentSpeed < minSteeringSpeed || Mathf.Abs(steeringInput) < 0.01f)
             {
+                // 入力がない時は回転を強く減衰
+                currentAngularVelocity = Mathf.Lerp(currentAngularVelocity, 0f, Time.fixedDeltaTime * 15f);
                 return;
             }
 
             // 速度に応じたステアリング調整
             float speedFactor = Mathf.Lerp(1.5f, 0.2f, currentSpeed / maxSpeed);
-            float throttleFactor = 1f - Mathf.Abs(throttleInput) * 0.5f;
 
             // 目標角速度を計算
-            targetAngularVelocity = steeringInput * maxSteerAngle * speedFactor * throttleFactor;
+            targetAngularVelocity = steeringInput * maxSteerAngle * speedFactor * 0.1f;
 
             // 角速度の滑らかな変化（慣性を保持）
-            currentAngularVelocity = Mathf.Lerp(currentAngularVelocity, targetAngularVelocity, Time.fixedDeltaTime * 3f);
+            currentAngularVelocity = Mathf.Lerp(currentAngularVelocity, targetAngularVelocity, Time.fixedDeltaTime * 2f);
 
-            // 回転を適用
-            Quaternion deltaRot = Quaternion.Euler(0f, currentAngularVelocity * Time.fixedDeltaTime, 0f);
-            rb.MoveRotation(rb.rotation * deltaRot);
+            if (throttleInput < 0f) {
+                // 後退時はステアリングを弱く
+               currentAngularVelocity *= 0.7f;
+            }
+
+            // 回転力を加える（慣性を保持）- 力を調整
+            Vector3 torque = Vector3.up * (currentAngularVelocity * 0.01f); // 力を0.1倍に調整
+            rb.AddTorque(torque, ForceMode.VelocityChange);
         }
 
         private void HandleDrift()
