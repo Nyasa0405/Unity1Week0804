@@ -78,26 +78,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 14
   accelerationForce: 1300
-  maxSteerAngle: 60
-  lowSpeedSteerMultiplier: 1.5
-  lowSpeedThreshold: 2
-  minSteerAtMaxSpeed: 0.2
-  throttleSteerReduction: 0.5
-  dragCoefficient: 0.3
-  engineBrakeForce: 2
-  minSteeringSpeed: 0.5
-  speedBasedDecay: 0.8
-  driftSpeedThreshold: 3
-  driftFactor: 0.85
-  rearWheelSlip: 0.3
-  frontWheelGrip: 0.8
+  maxSteerAngle: 90
   millTransform: {fileID: 3016825983127795375}
-  forwardMillRotationPower: 0.167
-  steeringMillRotationPower: 0.801
-  driftMillRotationPower: 0.92
+  millRotationSpeed: 800
+  millResponseSpeed: 5
+  forwardMillPower: 0.1
   mainAudioSource: {fileID: 6577094589682313589}
   millAudioSource: {fileID: 2509360120257275961}
-  millRotationDecay: 5
 --- !u!136 &6224940573254808450
 CapsuleCollider:
   m_ObjectHideFlags: 0
