@@ -35,6 +35,8 @@ namespace Player
         private float steeringSpeed; // 旋回速度
         private float currentAngularVelocity; // 現在の角速度
         private float targetAngularVelocity; // 目標角速度
+        private float lastRotationY; // 前フレームのY軸回転角度
+        private float rotationDelta; // 回転角度の変化量
 
         private Rigidbody rb;
         private float steeringInput;
@@ -127,6 +129,11 @@ namespace Player
             // 旋回速度を計算
             steeringSpeed = Mathf.Abs(steeringInput - lastSteeringInput) / Time.fixedDeltaTime;
             lastSteeringInput = steeringInput;
+
+            // 回転角度の変化量を計算
+            float currentRotationY = transform.eulerAngles.y;
+            rotationDelta = Mathf.DeltaAngle(lastRotationY, currentRotationY); // 角度差を計算
+            lastRotationY = currentRotationY;
 
             lastSpeed = currentSpeed;
             currentSpeed = rb.linearVelocity.magnitude;
@@ -269,12 +276,12 @@ namespace Player
                 // ドリフト時は最高速度で回転
                 targetRotationPower = 1f;
             }
-            else if (Mathf.Abs(steeringInput) > 0.1f && currentSpeed > 1f)
+            else if (Mathf.Abs(rotationDelta) > 0.1f && currentSpeed > 0.1f)
             {
-                // 旋回時：旋回速度に応じて回転
-                float steeringPower = Mathf.Abs(steeringInput);
+                // 旋回時：実際の回転角度変化量に応じて回転
+                float rotationPower = Mathf.Abs(rotationDelta) / 10f; // 回転角度変化量を正規化
                 float speedPower = Mathf.Clamp01(currentSpeed / maxSpeed);
-                targetRotationPower = steeringPower * speedPower;
+                targetRotationPower = Mathf.Clamp01(rotationPower * speedPower);
             }
             else if (throttleInput > 0.1f && currentSpeed > 0.5f)
             {
@@ -319,7 +326,7 @@ namespace Player
             if (millAudioSource != null)
             {
                 // 回転パワー（0-1）に基づいてピッチを調整
-                float pitchMultiplier = 0.8f + (currentMillRotationPower * 1.2f); // 0.5倍から2.0倍の範囲
+                float pitchMultiplier = 0.5f + (currentMillRotationPower * 1.5f); // 0.5倍から2.0倍の範囲
                 millAudioSource.pitch = pitchMultiplier;
             }
         }
