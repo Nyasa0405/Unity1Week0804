@@ -27,8 +27,8 @@ MonoBehaviour:
   crushDiffusionByPlayerSpeedRate: 5
   maxGroundBeans: 20
   maxGroundCoffee: 10
-  baseMillGrindSpeed: 2
-  spillSpeed: 2
+  baseMillGrindSpeed: 5
+  spillInterval: 0.5
   scorePerGroundCoffee: 100
   comboMultiplier: 5
   comboTimeWindow: 2
