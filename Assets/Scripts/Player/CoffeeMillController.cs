@@ -333,7 +333,6 @@ namespace Player
         private void HandleSpilling()
         {
             // 高速衝突時はコーヒーがこぼれる
-            Debug.Log($" Last Speed: {lastSpeed}, Current Speed: {currentSpeed}");
             if (lastSpeed > GamePlayMode.Shared.Settings.SpillSpeedThreshold
                 && currentSpeed <= 4f)
             {
