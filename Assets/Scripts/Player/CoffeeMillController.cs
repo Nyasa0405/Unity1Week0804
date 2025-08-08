@@ -9,116 +9,71 @@ namespace Player
     [RequireComponent(typeof(Rigidbody))]
     public class CoffeeMillController : MonoBehaviour, IPlayer
     {
-        /// <summary>
-        ///     車の最大前方速度（メートル/秒）。
-        /// </summary>
-        [Header("Settings"), SerializeField]
-        private float maxSpeed = 10f; // 車の最大前方速度（m/s）
+        [Header("Basic Settings")]
+        [SerializeField] private float maxSpeed = 14f;
+        [SerializeField] private float accelerationForce = 1300f;
+        [SerializeField] private float maxSteerAngle = 100f;
 
-        /// <summary>
-        ///     加速時に適用される力。値が大きいほど加速が強くなる。
-        /// </summary>
-        [SerializeField]
-        private float accelerationForce = 1100f; // 加速時に適用される力
-
-        /// <summary>
-        ///     1秒あたりの最大ステアリング角度（度）。
-        /// </summary>
-        [SerializeField]
-        private float maxSteerAngle = 60f; // 最大ステアリング角度（度/秒）
-
-        [Tooltip("低速時に適用するステアリング倍率"), SerializeField]
-        private float lowSpeedSteerMultiplier = 1.5f; // 低速時のステアリング倍率（>1）
-
-        [Tooltip("低速と判断する速度のしきい値"), SerializeField]
-        private float lowSpeedThreshold = 2f; // 低速しきい値（m/s）
-
-        [Tooltip("最高速到達時の最小ステアリング倍率"), SerializeField, Range(0f, 1f)]
-        private float minSteerAtMaxSpeed = 0.2f; // 高速時の最小ステアリング倍率
-
-        [Tooltip("アクセル入力時のステアリング減衰率"), SerializeField, Range(0f, 1f)]
-        private float throttleSteerReduction = 0.5f;
-
-        [Header("Realistic Physics"), Tooltip("空気抵抗係数"), SerializeField]
-        private float dragCoefficient = 0.3f; // 空気抵抗係数
-
-        [Tooltip("エンジンブレーキの強さ"), SerializeField]
-        private float engineBrakeForce = 2f; // エンジンブレーキ
-
-        [Tooltip("静止時の最小ステアリング速度"), SerializeField]
-        private float minSteeringSpeed = 0.5f; // 静止時の最小ステアリング速度
-
-        [Tooltip("速度に応じた減速係数（高速時は減速が遅い）"), SerializeField]
-        private float speedBasedDecay = 0.8f; // 速度に応じた減速係数
-
-        [Header("Drift Settings"), Tooltip("ドリフト開始の速度しきい値"), SerializeField]
-        private float driftSpeedThreshold = 3f; // ドリフト開始速度
-
-        [Tooltip("ドリフト時の横方向速度保持率"), SerializeField, Range(0f, 1f)]
-        private float driftFactor = 0.85f; // ドリフト時の横滑り量
-
-        [Tooltip("ドリフト時の後輪スリップ係数"), SerializeField, Range(0f, 1f)]
-        private float rearWheelSlip = 0.3f; // 後輪スリップ
-
-        [Tooltip("ドリフト時の前輪グリップ係数"), SerializeField, Range(0f, 1f)]
-        private float frontWheelGrip = 0.8f; // 前輪グリップ
-
-        [Header("Mill Rotation Settings"), SerializeField]
-        private Transform millTransform;
-
-        [Tooltip("前進時のミル回転速度（0-1）"), SerializeField, Range(0f, 1f)]
-        private float forwardMillRotationPower = 0.1f;
-
-        [Tooltip("旋回時のミル回転速度（0-1）"), SerializeField, Range(0f, 1f)]
-        private float steeringMillRotationPower = 0.4f;
-
-        [Tooltip("ドリフト時のミル回転速度（0-1）"), SerializeField, Range(0f, 1f)]
-        private float driftMillRotationPower = 0.6f;
+        [Header("Mill Settings")]
+        [SerializeField] private Transform millTransform;
+        [SerializeField] private float millRotationSpeed = 360f; // ミルの最大回転速度（度/秒）
+        [SerializeField] private float millResponseSpeed = 5f; // ミル回転の応答速度
+        [SerializeField, Range(0f, 1f)] private float forwardMillPower = 0.1f; // 前進時のミル回転パワー（0-1）
 
         [Header("Audio Settings")]
-        [SerializeField] private AudioSource mainAudioSource; // メインのAudioSource（効果音用）
-        [SerializeField] private AudioSource millAudioSource; // ミル専用のAudioSource
+        [SerializeField] private AudioSource mainAudioSource;
+        [SerializeField] private AudioSource millAudioSource;
 
-
-        [Tooltip("ミル回転の減衰速度"), SerializeField]
-        private float millRotationDecay = 5f;
+        // 内部計算用の変数
         private float currentMillRotationPower;
         private float currentSpeed;
         private float lastSpeed;
         private float grindTimer;
         private bool isDrifting;
-        private Vector3 lastVelocity;
-        private bool wasMillRotating = false; // 前フレームでミルが回転していたか
+        private bool wasMillRotating = false;
+        private float lastSteeringInput;
+        private float steeringSpeed; // 旋回速度
 
         private Rigidbody rb;
-        private float lastSpillTime;
         private float steeringInput;
         private float throttleInput;
         private InputSystem_Actions inputActions;
         private InputAction moveAction;
 
+        // 自動計算される値
+        private float lowSpeedThreshold => maxSpeed * 0.2f; // 最大速度の20%
+        private float driftSpeedThreshold => maxSpeed * 0.3f; // 最大速度の30%
+        private float minSteeringSpeed => maxSpeed * 0.05f; // 最大速度の5%
+
         private void Start()
         {
             rb = GetComponent<Rigidbody>();
             inputActions = new InputSystem_Actions();
-            // X軸とZ軸の回転を固定し、車が横転するのを防止
-            // リニアダンピングを設定し、入力がないときに徐々に減速
+            
+            // 物理設定
             rb.linearDamping = 0.14f;
-            // 角ダンピングを設定し、回転の変化を滑らかに制御
             rb.angularDamping = 0.8f;
+            
+            // 入力設定
             moveAction = inputActions.Player.Move;
-
             inputActions.Enable();
+            
+            // ゲーム管理
             GamePlayMode.Shared.OnPlayerSpawn(this);
             GamePlayMode.Shared.OnGameEnded += () =>
             {
-                // ゲーム終了時にミルの回転を停止
                 if (millAudioSource != null)
                 {
                     GamePlayMode.Shared.StopMillSound(millAudioSource);
                 }
             };
 
+            // AudioSource設定
+            SetupAudioSources();
+        }
+
+        private void SetupAudioSources()
+        {
             // メインAudioSource（効果音用）
             if (mainAudioSource == null)
             {
@@ -162,29 +117,33 @@ namespace Player
                 return;
             }
             
-            // 入力を取得: 縦(forward/back)と横(left/right)
+            // 入力を取得
             var moveValue = moveAction.ReadValue<Vector2>();
-            throttleInput = moveValue.y; // 縦軸の入力（前進/後退）
-            steeringInput = moveValue.x; // 横軸の入力（左/右）
+            throttleInput = moveValue.y;
+            steeringInput = moveValue.x;
+
+            // 旋回速度を計算
+            steeringSpeed = Mathf.Abs(steeringInput - lastSteeringInput) / Time.fixedDeltaTime;
+            lastSteeringInput = steeringInput;
 
             lastSpeed = currentSpeed;
             currentSpeed = rb.linearVelocity.magnitude;
 
-            HandleSteering();
-            HandleAcceleration();
-            HandleDeceleration();
-            HandleDrift();
+            // 各処理を実行
+            HandleMovement();
             UpdateMillRotation();
-            HandleMillSound(); // ミル音の制御を追加
+            HandleMillSound();
             HandleGrinding();
             HandleSpilling();
         }
 
-        public Transform Transform => transform;
-
-        public float Speed => currentSpeed;
-
-        public float MaxSpeed => maxSpeed;
+        private void HandleMovement()
+        {
+            HandleAcceleration();
+            HandleDeceleration();
+            HandleSteering();
+            HandleDrift();
+        }
 
         private void HandleAcceleration()
         {
@@ -209,10 +168,9 @@ namespace Player
                 Vector3 forward = transform.forward;
                 float forwardVel = Vector3.Dot(rb.linearVelocity, forward);
 
-                // 前進している場合のみエンジンブレーキを適用
                 if (forwardVel > 0.1f)
                 {
-                    Vector3 engineBrakeForceVector = -forward * (engineBrakeForce * Time.fixedDeltaTime);
+                    Vector3 engineBrakeForceVector = -forward * (2f * Time.fixedDeltaTime);
                     rb.AddForce(engineBrakeForceVector);
                 }
             }
@@ -220,84 +178,62 @@ namespace Player
             // 空気抵抗（速度の2乗に比例）
             if (currentSpeed > 0.1f)
             {
-                Vector3 dragForce = -rb.linearVelocity.normalized * (dragCoefficient * currentSpeed * currentSpeed * Time.fixedDeltaTime);
+                Vector3 dragForce = -rb.linearVelocity.normalized * (0.3f * currentSpeed * currentSpeed * Time.fixedDeltaTime);
                 rb.AddForce(dragForce);
             }
         }
 
         private void HandleSteering()
         {
-            float speed = rb.linearVelocity.magnitude;
-            float speedSteerFactor;
-
             // 静止時または極低速時のステアリング制限
-            if (speed < minSteeringSpeed)
+            if (currentSpeed < minSteeringSpeed)
             {
-                // 速度が低すぎる場合はステアリングを無効化
                 return;
             }
 
-            // 低速時：速度がしきい値以下なら倍率を lowSpeedSteerMultiplier から 1 へ補間
-            if (speed <= lowSpeedThreshold)
-            {
-                float t = speed / lowSpeedThreshold; // 0～1
-                speedSteerFactor = Mathf.Lerp(lowSpeedSteerMultiplier, 1f, t);
-            }
-            else
-            {
-                // しきい値以上：速度に応じて 1 から minSteerAtMaxSpeed へ補間
-                float t = (speed - lowSpeedThreshold) / (maxSpeed - lowSpeedThreshold);
-                speedSteerFactor = Mathf.Lerp(1f, minSteerAtMaxSpeed, Mathf.Clamp01(t));
-            }
+            // 速度に応じたステアリング調整
+            float speedFactor = Mathf.Lerp(1.5f, 0.2f, currentSpeed / maxSpeed);
+            float throttleFactor = 1f - Mathf.Abs(throttleInput) * 0.5f;
 
-            // アクセル入力時の追加減衰
-            float throttleFactor = 1f - Mathf.Abs(throttleInput) * throttleSteerReduction;
-
-            // 最終的なステアリング角度
-            float steerAmount = steeringInput * maxSteerAngle * speedSteerFactor * throttleFactor;
+            float steerAmount = steeringInput * maxSteerAngle * speedFactor * throttleFactor;
             Quaternion deltaRot = Quaternion.Euler(0f, steerAmount * Time.fixedDeltaTime, 0f);
             rb.MoveRotation(rb.rotation * deltaRot);
         }
 
         private void HandleDrift()
         {
-            float speed = rb.linearVelocity.magnitude;
             float lateralSpeed = Mathf.Abs(Vector3.Dot(rb.linearVelocity, transform.right));
             float forwardSpeed = Vector3.Dot(rb.linearVelocity, transform.forward);
 
-            // ドリフト条件の判定
-            bool shouldDrift = speed > driftSpeedThreshold &&
-                               lateralSpeed > speed * 0.3f &&
-                               Mathf.Abs(steeringInput) > 0.1f &&
-                               throttleInput > 0.1f;
+            // ドリフト条件の判定（より厳密に）
+            bool shouldDrift = currentSpeed > driftSpeedThreshold &&
+                               lateralSpeed > currentSpeed * 0.2f && // 閾値を下げる
+                               Mathf.Abs(steeringInput) > 0.3f && // ステアリング閾値を上げる
+                               throttleInput > 0.2f; // アクセル閾値を上げる
 
             isDrifting = shouldDrift;
 
             if (isDrifting)
             {
-                // ドリフト時の挙動
+                // ドリフト時の挙動（より強く）
                 Vector3 forwardVel = transform.forward * forwardSpeed;
                 Vector3 lateralVel = transform.right * Vector3.Dot(rb.linearVelocity, transform.right);
 
-                // 後輪スリップをシミュレート
-                Vector3 rearWheelForce = -lateralVel * (rearWheelSlip * accelerationForce * Time.fixedDeltaTime);
-                rb.AddForce(rearWheelForce);
+                // 後輪スリップを強くする
+                Vector3 rearWheelForce = -lateralVel * (0.5f * accelerationForce * Time.fixedDeltaTime);
+                Vector3 frontWheelForce = lateralVel * (0.1f * accelerationForce * Time.fixedDeltaTime);
+                rb.AddForce(rearWheelForce + frontWheelForce);
 
-                // 前輪グリップをシミュレート
-                Vector3 frontWheelForce = lateralVel * ((1f - frontWheelGrip) * accelerationForce * Time.fixedDeltaTime);
-                rb.AddForce(frontWheelForce);
-
-                // 横方向速度の保持
-                rb.linearVelocity = forwardVel + lateralVel * driftFactor;
+                // 横方向速度をより保持
+                rb.linearVelocity = forwardVel + lateralVel * 0.9f;
             }
             else
             {
-                // 通常走行時の横方向速度減衰（速度に応じて変化）
+                // 通常走行時の横方向速度減衰
                 Vector3 forwardVel = transform.forward * Vector3.Dot(rb.linearVelocity, transform.forward);
                 Vector3 lateralVel = transform.right * Vector3.Dot(rb.linearVelocity, transform.right);
-
-                // 速度が高いほど横方向速度を保持
-                float lateralDecay = Mathf.Lerp(0.95f, 0.98f, Mathf.Clamp01(speed / maxSpeed));
+                
+                float lateralDecay = Mathf.Lerp(0.95f, 0.98f, currentSpeed / maxSpeed);
                 Vector3 vel = forwardVel + lateralVel * lateralDecay;
                 vel.y = 0f;
                 rb.linearVelocity = vel;
@@ -307,40 +243,39 @@ namespace Player
         private void UpdateMillRotation()
         {
             float targetRotationPower = 0f;
-            float speed = rb.linearVelocity.magnitude;
 
             if (isDrifting)
             {
                 // ドリフト時は最高速度で回転
-                targetRotationPower = driftMillRotationPower;
+                targetRotationPower = 1f;
             }
-            else if (Mathf.Abs(steeringInput) > 0.1f && speed > 1f)
+            else if (Mathf.Abs(steeringInput) > 0.1f && currentSpeed > 1f)
             {
-                // 旋回時
-                targetRotationPower = steeringMillRotationPower * Mathf.Abs(steeringInput);
+                // 旋回時：旋回速度に応じて回転
+                float steeringPower = Mathf.Abs(steeringInput);
+                float speedPower = Mathf.Clamp01(currentSpeed / maxSpeed);
+                targetRotationPower = steeringPower * speedPower;
             }
-            else if (throttleInput > 0.1f && speed > 0.5f)
+            else if (throttleInput > 0.1f && currentSpeed > 0.5f)
             {
-                // 前進時
-                targetRotationPower = forwardMillRotationPower * throttleInput;
+                // 前進時：ゆっくり回転
+                targetRotationPower = forwardMillPower * throttleInput;
             }
 
             // 回転パワーの滑らかな変化
-            currentMillRotationPower = Mathf.Lerp(currentMillRotationPower, targetRotationPower, Time.fixedDeltaTime * millRotationDecay);
+            currentMillRotationPower = Mathf.Lerp(currentMillRotationPower, targetRotationPower, Time.fixedDeltaTime * millResponseSpeed);
             
-            // 極小値を0に丸める（浮動小数点数の精度問題を解決）
+            // 極小値を0に丸める
             if (Mathf.Abs(currentMillRotationPower) < 0.001f)
             {
                 currentMillRotationPower = 0f;
             }
-            
-            // 小数点第3位以下を切り捨て
-            currentMillRotationPower = Mathf.Floor(currentMillRotationPower * 100f) / 100f;
 
-            // millの回転を更新
+            // ミルの回転を更新
             if (millTransform != null)
             {
-                millTransform.Rotate(Vector3.up, currentMillRotationPower * 360f * Time.fixedDeltaTime, Space.Self);
+                float rotationSpeed = currentMillRotationPower * millRotationSpeed;
+                millTransform.Rotate(Vector3.up, rotationSpeed * Time.fixedDeltaTime, Space.Self);
             }
         }
 
@@ -351,18 +286,17 @@ namespace Player
             // ミル回転状態が変わった時のみ音を制御
             if (isCurrentlyRotating && !wasMillRotating)
             {
-                // ミル回転開始
                 GamePlayMode.Shared.StartMillSound(millAudioSource);
             }
             else if (!isCurrentlyRotating && wasMillRotating)
             {
-                // ミル回転停止
                 GamePlayMode.Shared.StopMillSound(millAudioSource);
             }
             
             wasMillRotating = isCurrentlyRotating;
 
-            var rate = GamePlayMode.Shared.Player.Speed / GamePlayMode.Shared.Player.MaxSpeed;
+            // 速度に応じたピッチ調整
+            var rate = currentSpeed / maxSpeed;
             var addPitch = Mathf.Clamp((rate - 0.7f) / 0.3f, 0f, 1f);
             if (millAudioSource != null)
             {
@@ -379,7 +313,7 @@ namespace Player
                 grindTimer += Time.fixedDeltaTime;
 
                 // ミルの回転パワーに応じて挽くスピードを変える
-                float grindSpeedMultiplier = currentMillRotationPower; // 0-1の値をそのまま使用
+                float grindSpeedMultiplier = currentMillRotationPower;
                 float grindInterval = 1f / (GamePlayMode.Shared.Settings.BaseMillGrindSpeed * grindSpeedMultiplier);
 
                 if (grindTimer >= grindInterval)
@@ -399,15 +333,17 @@ namespace Player
         private void HandleSpilling()
         {
             // 高速衝突時はコーヒーがこぼれる
-            if (
-                lastSpeed > GamePlayMode.Shared.Settings.SpillSpeedThreshold
-                && currentSpeed <= 0.2f
-                && lastSpillTime < Time.time + GamePlayMode.Shared.Settings.SpillInterval)
+            Debug.Log($" Last Speed: {lastSpeed}, Current Speed: {currentSpeed}");
+            if (lastSpeed > GamePlayMode.Shared.Settings.SpillSpeedThreshold
+                && currentSpeed <= 4f)
             {
                 GamePlayMode.Shared.PlayHitObstacleSound(transform);
                 GamePlayMode.Shared.PlayerState.RemoveGroundCoffee(1);
-                lastSpillTime = Time.time;
             }
         }
+
+        public Transform Transform => transform;
+        public float Speed => currentSpeed;
+        public float MaxSpeed => maxSpeed;
     }
 }

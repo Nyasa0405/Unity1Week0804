@@ -28,7 +28,7 @@ namespace Component
             // 再生後にオブジェクトを破棄する場合
             if (_destroyOnFinish)
             {
-                StartCoroutine(DestroyAfterClipEnds(_clip.length + 0.2f));
+                StartCoroutine(DestroyAfterClipEnds(_clip.length + 1f));
             }
         }
 
