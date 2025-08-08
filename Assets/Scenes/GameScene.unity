@@ -1572,6 +1572,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1781944550182043487, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
+      propertyPath: gameId
+      value: nyasa0405-coffeegame
+      objectReference: {fileID: 0}
+    - target: {fileID: 1781944550182043487, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
       propertyPath: navMeshSurface
       value: 
       objectReference: {fileID: 778423465}

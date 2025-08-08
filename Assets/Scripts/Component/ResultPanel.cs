@@ -1,5 +1,6 @@
 using Main;
 using Model;
+using naichilab;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -17,19 +18,31 @@ namespace Component
         
         [SerializeField] private Button restartButton;
         [SerializeField] private Button titleButton;
+        [SerializeField] private Button tweetButton;
 
         private void Start()
         {
             // 初期状態では非表示
             if (resultPanel != null)
+            {
                 resultPanel.SetActive(false);
+            }
             
             // ボタンのイベントを設定
             if (restartButton != null)
+            {
                 restartButton.onClick.AddListener(OnRestartButtonClicked);
-            
+            }
+
             if (titleButton != null)
+            {
                 titleButton.onClick.AddListener(OnTitleButtonClicked);
+            }
+
+            if (tweetButton != null)
+            {
+                tweetButton.onClick.AddListener(OnTweetButtonClicked);
+            }
             
             // ゲーム終了イベントを購読
             GamePlayMode.Shared.OnGameEnded += ShowResult;
@@ -73,6 +86,14 @@ namespace Component
         private void OnTitleButtonClicked()
         {
             GamePlayMode.Shared.ReturnToTitle();
+        }
+
+        private void OnTweetButtonClicked()
+        {
+            PlayerState playerState = GamePlayMode.Shared.PlayerState;
+            var text = $"轢乃珈琲店で{playerState.Score}点獲得！\n";
+            // ツイート機能を呼び出す
+            UnityRoomTweet.Tweet(GamePlayMode.Shared.GameId, text, "unityroom", "unity1week");
         }
     }
 } 

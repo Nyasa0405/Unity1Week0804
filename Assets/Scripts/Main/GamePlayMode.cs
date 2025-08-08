@@ -13,6 +13,9 @@ namespace Main
 {
     public partial class GamePlayMode: MonoBehaviour
     {
+        [Header("System Settings"), SerializeField]
+        private string gameId = "";
+        public string GameId => gameId;
 
         [Header("Game Settings")]
         [SerializeField] private GameSettings settings;
