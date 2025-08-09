@@ -196,6 +196,7 @@ MonoBehaviour:
   startButton: {fileID: 549491582001831107}
   howToPlayButton: {fileID: 6732977139762059833}
   howToPlayPanel: {fileID: 0}
+  gameSettings: {fileID: 11400000, guid: 0b91affd98aae4788926c9f74d404f0b, type: 2}
 --- !u!1 &7052837661752232838
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ using Model;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Main
@@ -100,14 +101,26 @@ namespace Main
         public void RestartGame()
         {
             Time.timeScale = 1f;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         public void ReturnToTitle()
         {
             Time.timeScale = 1f;
             // タイトルシーンに戻る（シーン名は適宜変更してください）
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
+            SceneManager.LoadScene("Title");
+        }
+
+        public void LoadGameScene()
+        {
+            if (settings.GameSceneName != null)
+            {
+                SceneManager.LoadScene(settings.GameSceneName);
+            }
+            else
+            {
+                Debug.LogError("Game scene is not set in the GamePlayMode settings.");
+            }
         }
 
         public void OnPlayerSpawn(IPlayer _player)
