@@ -1,4 +1,3 @@
-using System;
 using Main;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,6 +15,9 @@ namespace Component.Title
 
         [SerializeField]
         private HowToPlayController howToPlayPanel;
+
+        [SerializeField]
+        private GameSettings gameSettings;
 
         private void Start()
         {
@@ -68,8 +70,7 @@ namespace Component.Title
         private void OnStartButtonClicked()
         {
             // Start the game
-            // GamePlayMode.Shared.StartGame();
-            SceneManager.LoadScene("GameScene");
+            SceneManager.LoadScene(gameSettings.GameSceneName);
         }
 
         private void OnHowToPlayButtonClicked()

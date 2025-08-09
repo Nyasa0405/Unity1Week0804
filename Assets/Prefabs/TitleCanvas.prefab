@@ -196,6 +196,7 @@ MonoBehaviour:
   startButton: {fileID: 549491582001831107}
   howToPlayButton: {fileID: 6732977139762059833}
   howToPlayPanel: {fileID: 0}
+  gameSettings: {fileID: 11400000, guid: 0b91affd98aae4788926c9f74d404f0b, type: 2}
 --- !u!1 &7052837661752232838
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,6 +280,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1143578496828652041}
     m_Modifications:
+    - target: {fileID: 1225517822286618129, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 364645197428285755}
+    - target: {fileID: 1418278439227974633, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+      propertyPath: m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1418278439227974633, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 47de8d95ac900054e841909c1750b520, type: 3}
+    - target: {fileID: 1418278439227974633, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6062535573626796670, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
       propertyPath: m_Name
       value: Start
@@ -368,6 +385,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+--- !u!114 &364645197428285755 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1418278439227974633, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+  m_PrefabInstance: {fileID: 1630802629515051730}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &549491582001831107 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1225517822286618129, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
@@ -392,6 +420,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1143578496828652041}
     m_Modifications:
+    - target: {fileID: 1225517822286618129, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 6908242859889878977}
+    - target: {fileID: 1418278439227974633, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+      propertyPath: m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1418278439227974633, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 47de8d95ac900054e841909c1750b520, type: 3}
+    - target: {fileID: 1418278439227974633, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6062535573626796670, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
       propertyPath: m_Name
       value: HowToPlay
@@ -499,5 +543,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6908242859889878977 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1418278439227974633, guid: b24c07bb824544ccc851e6c74d2fb344, type: 3}
+  m_PrefabInstance: {fileID: 5508393819379991592}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

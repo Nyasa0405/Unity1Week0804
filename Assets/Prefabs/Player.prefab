@@ -78,7 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 14
   accelerationForce: 1300
-  maxSteerAngle: 90
+  maxSteerAngle: 50
   millTransform: {fileID: 3016825983127795375}
   millRotationSpeed: 800
   millResponseSpeed: 5

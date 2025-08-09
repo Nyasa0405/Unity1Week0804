@@ -3,9 +3,6 @@ name: build-dispatch.yml
 on:
   workflow_dispatch:
     inputs:
-      commit_sha:
-        description: 'Commit SHA to build (optional)'
-        required: false
       branch:
         description: 'Git branch to build (optional)'
         required: false
@@ -17,16 +14,15 @@ jobs:
     steps:
       - name: Trigger Unity Cloud Build manually
         id: trigger-build
-        uses: Matuyuhi/unity-cloud-build-action@v0.2.6
+        uses: Matuyuhi/unity-cloud-build-action@v0.3.1
         with:
           unity_org_id: ${{ secrets.UNITY_ORG_ID }}
           unity_project_id: ${{ secrets.UNITY_PROJECT_ID }}
           build_target_id: ${{ secrets.UNITY_BUILD_TARGET_ID }}
           authorization_header: ${{ secrets.UNITY_AUTH_HEADER }}
-          commit_sha: ${{ github.event.inputs.commit_sha }}
           branch: ${{ github.event.inputs.branch }}
       - name: response with github summary
         run: |
           echo "Build triggered successfully!" >> "$GITHUB_STEP_SUMMARY"
           echo "Build ID: ${{ steps.trigger-build.outputs.build_id }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "Commit SHA: ${{ steps.trigger-build.outputs.commit }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Platform: ${{ steps.trigger-build.outputs.platform }}" >> "$GITHUB_STEP_SUMMARY"
