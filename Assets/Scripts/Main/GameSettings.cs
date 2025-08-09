@@ -28,6 +28,7 @@ namespace Main
 
         [Header("Score Settings"), SerializeField]
          private int scorePerGroundCoffee = 100; // 挽いたコーヒーが満タンになった時のスコア
+         private int scoreAddGroundCoffee = 10; // 挽いたコーヒー1つあたりのスコア
 
         [Header("Gameplay Settings"), SerializeField]
         private float spillSpeedThreshold = 5f; // 衝突時のこぼれ判定速度
@@ -42,6 +43,7 @@ namespace Main
         public int MaxGroundCoffee => maxGroundCoffee;
         public float BaseMillGrindSpeed => baseMillGrindSpeed;
         public int ScorePerGroundCoffee => scorePerGroundCoffee;
+        public int ScoreAddGroundCoffee => scoreAddGroundCoffee;
         public float SpillSpeedThreshold => spillSpeedThreshold;
         public float MinMillRotationForGrinding => minMillRotationForGrinding;
         public GameObject CrushBeanEffectPrefab => crushBeanEffectPrefab;
