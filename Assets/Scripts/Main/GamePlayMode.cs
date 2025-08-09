@@ -31,14 +31,18 @@ namespace Main
         private Transform spawnCenter;
         private Coroutine spawnCoroutine;
         private Coroutine gameTimerCoroutine;
+        private Coroutine countdownCoroutine;
         
         // ゲーム状態管理
-        public bool IsGameActive { get; private set; } = true;
+        public bool IsGameActive { get; private set; } = false; // 初期状態をfalseに変更
         public float RemainingTime { get; private set; }
         
         // イベント
         public event Action<float> OnTimeChanged;
         public event Action OnGameEnded;
+        public event Action OnCountdownStarted;
+        public event Action<int> OnCountdownUpdated;
+        public event Action OnCountdownFinished;
         
         public static GamePlayMode Shared { get; private set; }
         public IPlayer Player { get; private set; }
@@ -64,8 +68,9 @@ namespace Main
                 spawnCenter = transform;
 
             RemainingTime = settings.GameTimeSec;
-            spawnCoroutine = StartCoroutine(SpawnBeansRoutine());
-            gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
+            
+            // カウントダウンを開始
+            StartCountdown();
         }
 
         private void OnDestroy()
@@ -74,6 +79,48 @@ namespace Main
                 StopCoroutine(spawnCoroutine);
             if (gameTimerCoroutine != null)
                 StopCoroutine(gameTimerCoroutine);
+            if (countdownCoroutine != null)
+                StopCoroutine(countdownCoroutine);
+        }
+
+        private void StartCountdown()
+        {
+            // ゲームを一時停止状態にする
+            Time.timeScale = 0f;
+            IsGameActive = false;
+            
+            // カウントダウン開始イベントを発火
+            OnCountdownStarted?.Invoke();
+            
+            // カウントダウンコルーチンを開始
+            countdownCoroutine = StartCoroutine(CountdownRoutine());
+        }
+
+        private IEnumerator CountdownRoutine()
+        {
+            // 3,2,1のカウントダウン
+            for (int i = 3; i > 0; i--)
+            {
+                OnCountdownUpdated?.Invoke(i);
+                yield return new WaitForSecondsRealtime(1f);
+            }
+            
+            // カウントダウン終了
+            OnCountdownFinished?.Invoke();
+            
+            // ゲームを開始
+            StartGame();
+        }
+
+        private void StartGame()
+        {
+            // ゲームを再開
+            Time.timeScale = 1f;
+            IsGameActive = true;
+            
+            // ゲーム開始処理
+            spawnCoroutine = StartCoroutine(SpawnBeansRoutine());
+            gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
         }
 
         private IEnumerator GameTimerRoutine()
@@ -146,7 +193,7 @@ namespace Main
 
         private IEnumerator SpawnBeansRoutine()
         {
-            while (true)
+            while (IsGameActive) // IsGameActiveチェックを追加
             {
                 if (Beans.Count < settings.MaxBeanCount)
                 {

@@ -11,8 +11,11 @@ namespace Component
 
         private void Start()
         {
-            // 初期時間を表示
-            UpdateTimerDisplay(GamePlayMode.Shared.RemainingTime);
+            // ゲームが開始される前は初期時間を表示しない
+            if (GamePlayMode.Shared.IsGameActive)
+            {
+                UpdateTimerDisplay(GamePlayMode.Shared.RemainingTime);
+            }
             
             // 時間変更イベントを購読
             GamePlayMode.Shared.OnTimeChanged += UpdateTimerDisplay;
