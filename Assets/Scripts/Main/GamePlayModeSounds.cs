@@ -7,6 +7,7 @@ namespace Main
     {
         [SerializeField] private SoundSettings soundSettings;
         [SerializeField] private GameObject singleAudioSourcePrefab;
+        [SerializeField] private AudioSource bgmAudioSource;
         #region Sound Methods
 
         /// <summary>
@@ -63,6 +64,46 @@ namespace Main
             if (soundSettings != null)
             {
                 soundSettings.PlayMakeCoffeeSound(_source);
+            }
+        }
+
+        public void PlayCountdownSound()
+        {
+            if (soundSettings != null)
+            {
+                var audioSource = Instantiate(singleAudioSourcePrefab, transform.position, Quaternion.identity).GetComponent<SingleAudioSource>();
+                if (audioSource != null)
+                {
+                    audioSource.PlaySound(soundSettings.Countdown, true);
+                }
+                else
+                {
+                    Debug.LogWarning("SingleAudioSource component not found on the instantiated prefab.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("SoundSettings is not assigned.");
+            }
+        }
+
+        public void PlayStartAndFinishSound()
+        {
+            if (soundSettings != null)
+            {
+                var audioSource = Instantiate(singleAudioSourcePrefab, transform.position, Quaternion.identity).GetComponent<SingleAudioSource>();
+                if (audioSource != null)
+                {
+                    audioSource.PlaySound(soundSettings.StartAndFinish, true);
+                }
+                else
+                {
+                    Debug.LogWarning("SingleAudioSource component not found on the instantiated prefab.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("SoundSettings is not assigned.");
             }
         }
 
