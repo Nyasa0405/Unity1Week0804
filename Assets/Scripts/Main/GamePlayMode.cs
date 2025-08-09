@@ -13,6 +13,9 @@ namespace Main
 {
     public partial class GamePlayMode: MonoBehaviour
     {
+        [Header("System Settings"), SerializeField]
+        private string gameId = "";
+        public string GameId => gameId;
 
         [Header("Game Settings")]
         [SerializeField] private GameSettings settings;
@@ -20,6 +23,7 @@ namespace Main
         [Header("Spawn Settings")]
         [SerializeField] private NavMeshSurface navMeshSurface;
         [SerializeField] private LayerMask spawnLayerMask = 1;
+		[SerializeField] private List<Transform> spawnPoints;
 
         public List<ICoffeeBean> Beans = new List<ICoffeeBean>();
 
@@ -159,42 +163,21 @@ namespace Main
 
         private Vector3 GetRandomNavMeshPosition()
         {
-            Vector3 center = navMeshSurface.center;
-            Vector3 randomPos;
-            int attempts = 0;
-            const int maxAttempts = 30;
+            Vector3? spawnPoint;
 
-            do
+            if (spawnPoints == null || spawnPoints.Count == 0)
             {
-                // 円形の範囲内でランダムな位置を生成
-                Vector2 randomCircle = Random.insideUnitCircle * settings.BeanSpawnRadius;
-                randomPos = center + new Vector3(randomCircle.x, 100f, randomCircle.y); // 高い位置から開始
-                attempts++;
-            } while (attempts < maxAttempts && !IsValidSpawnPosition(randomPos));
-
-            // 有効な位置が見つからない場合は中心位置を返す
-            if (attempts >= maxAttempts)
-            {
-                // Debug.LogWarning("Valid spawn position not found, using center position");
-                return center;
+                // Spawn pointsが設定されていない場合は中心位置を使用
+                return navMeshSurface.center;
             }
+            spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)]?.position;
 
-            return randomPos;
-        }
-
-        private bool IsValidSpawnPosition(Vector3 _position)
-        {
-            // NavMesh上にあるかチェック
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(_position, out hit, 100f, NavMesh.AllAreas))
+            if (spawnPoint == null)
             {
-                // 他のオブジェクトとの重複をチェック
-                if (!Physics.CheckSphere(hit.position, 0.5f, spawnLayerMask))
-                {
-                    return true;
-                }
+                // Debug.LogWarning("No valid spawn point found.");
+                return navMeshSurface.center;
             }
-            return false;
+            return spawnPoint.Value;
         }
 
         public void OnCrushBeanEffect(ICoffeeBean _bean)
