@@ -1,3 +1,4 @@
+using System.Collections;
 using Main;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -70,6 +71,16 @@ namespace Component.Title
         private void OnStartButtonClicked()
         {
             // Start the game
+            if (gameSettings == null)
+            {
+                Debug.LogError("GameSettings is not assigned in the inspector.");
+                return;
+            }
+            StartCoroutine(DelayStartGame());
+        }
+        private IEnumerator DelayStartGame()
+        {
+            yield return new WaitForSeconds(0.5f); // Delay for 0.5 seconds before starting the game
             SceneManager.LoadScene(gameSettings.GameSceneName);
         }
 

@@ -11,11 +11,20 @@ namespace Main
         [SerializeField] private List<AudioClip> hitObstacle;
         [SerializeField] private List<AudioClip> makeCoffee;
         [SerializeField] private List<AudioClip> mill;
+        [SerializeField] private AudioClip click;
+        [SerializeField] private AudioClip countdown;
+        [SerializeField] private AudioClip startAndFinish;
+        [Header("BGM")]
+        [SerializeField] private AudioClip gameBGM;
 
         public List<AudioClip> BeansBreak => beansBreak;
         public List<AudioClip> HitObstacle => hitObstacle;
         public List<AudioClip> MakeCoffee => makeCoffee;
         public List<AudioClip> Mill => mill;
+        public AudioClip Click => click;
+        public AudioClip Countdown => countdown;
+        public AudioClip StartAndFinish => startAndFinish;
+        public AudioClip GameBGM => gameBGM;
 
         /// <summary>
         /// 障害物にぶつかった時の音をランダムに再生

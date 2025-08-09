@@ -20,3 +20,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f186c077b74ccd1499f7c66164a9eb0f, type: 3}
   mill:
   - {fileID: 8300000, guid: 311ec0bb3096644448ec2017ed8040bc, type: 3}
+  click: {fileID: 8300000, guid: 0aad084075ed1ca448787db358fa35e2, type: 3}
+  countdown: {fileID: 8300000, guid: d91363adf7007464ab642220cb23b2fe, type: 3}
+  startAndFinish: {fileID: 8300000, guid: ecabfc331db2b5d488ee708568576c4e, type: 3}
+  gameBGM: {fileID: 8300000, guid: 6ab949dd80fccb64e9fa020f3fb117fe, type: 3}

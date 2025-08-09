@@ -24,7 +24,7 @@ namespace Component
 
         private Coroutine sendScoreCoroutine;
 
-        private void Start()
+        private void OnEnable()
         {
             // 初期状態では非表示
             if (resultPanel != null)
