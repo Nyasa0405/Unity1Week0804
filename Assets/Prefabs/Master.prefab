@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8899259939397035357}
   - component: {fileID: 1781944550182043487}
+  - component: {fileID: 7119261829570181286}
   m_Layer: 0
   m_Name: Master
   m_TagString: Untagged
@@ -43,7 +44,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 909d186ba80b4ee5b2230aca9b0fa4a4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 0b91affd98aae4788926c9f74d404f0b, type: 2}
   navMeshSurface: {fileID: 0}
   spawnLayerMask:
@@ -52,3 +53,16 @@ MonoBehaviour:
   spawnPoints: []
   soundSettings: {fileID: 11400000, guid: b0186f753b2dc41069219064f4841ddd, type: 2}
   singleAudioSourcePrefab: {fileID: 7990926519505237289, guid: 1516d759481f143eda415cfab7465900, type: 3}
+--- !u!114 &7119261829570181286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4651217065093378883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a0b2d9b9a77e4cedb5c8ab46e4b0d0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HmacKey: BIUFJueJxVKHglkdPWhLi3d3FsaDAsOwOwnhEadBECJ8cq6AhPwSnxAcHvfN6+HSMRYvueI9/YJoXiDDGy7Ueg==

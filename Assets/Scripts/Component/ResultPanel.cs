@@ -1,9 +1,11 @@
+using System.Collections;
 using Main;
 using Model;
 using naichilab;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using unityroom.Api;
 
 namespace Component
 {
@@ -19,6 +21,8 @@ namespace Component
         [SerializeField] private Button restartButton;
         [SerializeField] private Button titleButton;
         [SerializeField] private Button tweetButton;
+
+        private Coroutine sendScoreCoroutine;
 
         private void Start()
         {
@@ -53,6 +57,11 @@ namespace Component
             // イベントの購読を解除
             if (GamePlayMode.Shared != null)
                 GamePlayMode.Shared.OnGameEnded -= ShowResult;
+
+            if (sendScoreCoroutine != null)
+            {
+                StopCoroutine(sendScoreCoroutine);
+            }
         }
 
         private void ShowResult()
@@ -62,6 +71,18 @@ namespace Component
             
             // スコア情報を表示
             UpdateResultDisplay();
+            if (sendScoreCoroutine != null)
+            {
+                StopCoroutine(sendScoreCoroutine);
+            }
+
+            sendScoreCoroutine = StartCoroutine(SendScoreCoroutine());
+        }
+
+        private IEnumerator SendScoreCoroutine()
+        {
+            yield return new WaitForSeconds(0.2f);
+            UnityroomApiClient.Instance.SendScore(1, GamePlayMode.Shared.PlayerState.Score, ScoreboardWriteMode.HighScoreDesc);
         }
 
         private void UpdateResultDisplay()
