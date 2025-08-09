@@ -114,7 +114,7 @@ namespace Player
 
         private void FixedUpdate()
         {
-            // ゲームが終了している場合は入力を無効化
+            // ゲームが開始されていない場合は入力を無効化
             if (!GamePlayMode.Shared.IsGameActive)
             {
                 throttleInput = 0f;
@@ -171,7 +171,6 @@ namespace Player
             if (throttleInput > 0 
             && forwardVel < (isSteering ? steetingMaxSpeed : maxSpeed))
             {
-                Debug.Log(steetingMaxSpeed);
                 // 前進時
                 rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
             }

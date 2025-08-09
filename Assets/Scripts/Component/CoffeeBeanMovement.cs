@@ -52,6 +52,10 @@ namespace Component
 
         private void Update()
         {
+            // ゲームが開始されていない場合は何もしない
+            if (!GamePlayMode.Shared.IsGameActive)
+                return;
+
             float distToPlayer = Vector3.Distance(transform.position, GamePlayMode.Shared.Player.Transform.position);
             if (distToPlayer < fleeDistance)
             {
