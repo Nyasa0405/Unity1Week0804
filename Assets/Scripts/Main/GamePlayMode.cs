@@ -88,24 +88,26 @@ namespace Main
             Time.timeScale = 0f;
             IsGameActive = false;
             
-            // カウントダウン開始イベントを発火
-            OnCountdownStarted?.Invoke();
-            
             // カウントダウンコルーチンを開始
             countdownCoroutine = StartCoroutine(CountdownRoutine());
         }
 
         private IEnumerator CountdownRoutine()
         {
+            yield return new WaitForSecondsRealtime(1f);
+            // カウントダウン開始イベントを発火
+            OnCountdownStarted?.Invoke();
             // 3,2,1のカウントダウン
             for (int i = 3; i > 0; i--)
             {
                 OnCountdownUpdated?.Invoke(i);
+                PlayCountdownSound();
                 yield return new WaitForSecondsRealtime(1f);
             }
             
             // カウントダウン終了
             OnCountdownFinished?.Invoke();
+            PlayStartAndFinishSound();
             
             // ゲームを開始
             StartGame();
@@ -120,6 +122,12 @@ namespace Main
             // ゲーム開始処理
             spawnCoroutine = StartCoroutine(SpawnBeansRoutine());
             gameTimerCoroutine = StartCoroutine(GameTimerRoutine());
+            if (soundSettings.GameBGM)
+            {
+                bgmAudioSource.clip = soundSettings.GameBGM;
+                bgmAudioSource.loop = true;
+                bgmAudioSource.Play();
+            }
         }
 
         private IEnumerator GameTimerRoutine()
@@ -140,6 +148,23 @@ namespace Main
         private void EndGame()
         {
             IsGameActive = false;
+            if (gameTimerCoroutine != null)
+            {
+                StopCoroutine(gameTimerCoroutine);
+            }
+            if (spawnCoroutine != null)
+            {
+                StopCoroutine(spawnCoroutine);
+            }
+            if (countdownCoroutine != null)
+            {
+                StopCoroutine(countdownCoroutine);
+            }
+            if (bgmAudioSource != null && bgmAudioSource.isPlaying)
+            {
+                bgmAudioSource.Stop();
+            }
+            PlayStartAndFinishSound();
             Time.timeScale = 0f; // ゲームを一時停止
             OnGameEnded?.Invoke();
         }

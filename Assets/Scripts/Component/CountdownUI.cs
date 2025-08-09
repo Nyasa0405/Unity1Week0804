@@ -16,6 +16,10 @@ namespace Component
             {
                 countdownPanel.SetActive(false);
             }
+            else
+            {
+                Debug.LogError("Countdown Panel is not assigned in the inspector.");
+            }
             
             // カウントダウン開始イベントを購読
             if (GamePlayMode.Shared != null)
@@ -23,6 +27,10 @@ namespace Component
                 GamePlayMode.Shared.OnCountdownStarted += ShowCountdown;
                 GamePlayMode.Shared.OnCountdownUpdated += UpdateCountdown;
                 GamePlayMode.Shared.OnCountdownFinished += HideCountdown;
+            }
+            else
+            {
+                Debug.LogWarning("GamePlayMode.Shared is null. Countdown UI will not function.");
             }
         }
 
@@ -43,10 +51,18 @@ namespace Component
             {
                 countdownPanel.SetActive(true);
             }
+            else
+            {
+                Debug.LogError("Countdown Panel is not assigned in the inspector.");
+            }
         }
 
         private void UpdateCountdown(int count)
         {
+            if (countdownPanel != null)
+            {
+                countdownPanel.SetActive(true);
+            }
             if (countdownText != null)
             {
                 countdownText.text = count.ToString();

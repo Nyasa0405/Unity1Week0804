@@ -17,12 +17,12 @@ namespace Component
             if (crushEffect != null)
             {
                 playerSpeedRate = _player.Speed / _player.MaxSpeed;
-                StartCoroutine(Start());
+                StartCoroutine(PlayInternal());
             }
 
         }
 
-        private IEnumerator Start()
+        private IEnumerator PlayInternal()
         {
             var baseVelocitySpeed = GamePlayMode.Shared.Settings.CrushBaseDiffusion;
             var rateVelocitySpeed = GamePlayMode.Shared.Settings.CrushDiffusionByPlayerSpeedRate;

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8191124065956611950}
   - component: {fileID: 1225517822286618129}
   - component: {fileID: 1418278439227974633}
+  - component: {fileID: 2308668107224531738}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -87,7 +88,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1418278439227974633}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -121,6 +122,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 4.55
+--- !u!114 &2308668107224531738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6062535573626796670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f906946baeef46fa9e8232016fc3f1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonClickSound: {fileID: 8300000, guid: 0aad084075ed1ca448787db358fa35e2, type: 3}
+  singleAudioSourcePrefab: {fileID: 7990926519505237289, guid: 1516d759481f143eda415cfab7465900, type: 3}
 --- !u!1 &7602589580509696010
 GameObject:
   m_ObjectHideFlags: 0
