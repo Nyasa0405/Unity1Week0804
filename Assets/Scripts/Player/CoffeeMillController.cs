@@ -37,6 +37,7 @@ namespace Player
         private float targetAngularVelocity; // 目標角速度
         private float lastRotationY; // 前フレームのY軸回転角度
         private float rotationDelta; // 回転角度の変化量
+        private bool isSteering; // 旋回中かどうか
 
         private Rigidbody rb;
         private float steeringInput;
@@ -113,7 +114,7 @@ namespace Player
 
         private void FixedUpdate()
         {
-            // ゲームが終了している場合は入力を無効化
+            // ゲームが開始されていない場合は入力を無効化
             if (!GamePlayMode.Shared.IsGameActive)
             {
                 throttleInput = 0f;
@@ -154,12 +155,21 @@ namespace Player
             HandleDrift();
         }
 
+        private float steetingMaxSpeed = 0f;
+
         private void HandleAcceleration()
         {
             Vector3 forward = transform.forward;
             float forwardVel = Vector3.Dot(rb.linearVelocity, forward);
+            if (isSteering && steetingMaxSpeed < 0.1f)
+            {
+                steetingMaxSpeed = currentSpeed;
+            } else if (!isSteering) {
+                steetingMaxSpeed = 0f;
+            }
 
-            if (throttleInput > 0 && forwardVel < maxSpeed)
+            if (throttleInput > 0 
+            && forwardVel < (isSteering ? steetingMaxSpeed : maxSpeed))
             {
                 // 前進時
                 rb.AddForce(forward * (throttleInput * accelerationForce * Time.fixedDeltaTime));
@@ -200,6 +210,9 @@ namespace Player
 
         private void HandleSteering()
         {
+            // 旋回状態を更新
+            isSteering = Mathf.Abs(steeringInput) > 0.1f && currentSpeed > minSteeringSpeed;
+            
             // 静止時または極低速時のステアリング制限
             if (currentSpeed < minSteeringSpeed || Mathf.Abs(steeringInput) < 0.01f)
             {
@@ -212,7 +225,7 @@ namespace Player
             float speedFactor = Mathf.Lerp(1.5f, 0.2f, currentSpeed / maxSpeed);
 
             // 目標角速度を計算
-            targetAngularVelocity = steeringInput * maxSteerAngle * speedFactor * 0.1f;
+            targetAngularVelocity = steeringInput * maxSteerAngle * speedFactor * 0.1f * (steetingMaxSpeed / maxSpeed);
 
             // 角速度の滑らかな変化（慣性を保持）
             currentAngularVelocity = Mathf.Lerp(currentAngularVelocity, targetAngularVelocity, Time.fixedDeltaTime * 2f);

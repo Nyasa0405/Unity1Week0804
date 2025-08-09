@@ -35,6 +35,12 @@ namespace Component
                 return;
             }
 
+            // ゲームが開始されていない場合はUIを更新しない
+            if (!GamePlayMode.Shared.IsGameActive)
+            {
+                return;
+            }
+
             UpdateUI();
         }
 
