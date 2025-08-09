@@ -8,6 +8,7 @@ namespace Main
     {
         [Header("General Settings"), SerializeField]
         private float gameTimeSec = 60f; // ゲームの持続時間を60秒に設定
+        [SerializeField] private string gameSceneName = "GameScene";
         [Header("Bean Settings"), SerializeField]
         private List<GameObject> beanPrefabs;
         [SerializeField] private int maxBeanCount = 30; // フィールドの豆の数を6-10個に調整
@@ -33,6 +34,7 @@ namespace Main
         [SerializeField] private float minMillRotationForGrinding = 0.01f; // 挽くための最小ミル回転速度を下げる
 
         public float GameTimeSec => gameTimeSec;
+        public string GameSceneName => gameSceneName;
         public List<GameObject> BeanPrefabs => beanPrefabs;
         public int MaxBeanCount => maxBeanCount;
         public float BeanSpawnInterval => beanSpawnInterval;
