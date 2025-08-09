@@ -18,6 +18,7 @@ namespace Model
         public void AddGroundCoffee(int _amount, AudioSource _audioSource)
         {
             GroundCoffee = Mathf.Min(GroundCoffee + _amount, GamePlayMode.Shared.Settings.MaxGroundCoffee);
+            Score += _amount * GamePlayMode.Shared.Settings.ScoreAddGroundCoffee;
 
             // 最大値に達したらスコアに変換
             if (GroundCoffee >= GamePlayMode.Shared.Settings.MaxGroundCoffee)
