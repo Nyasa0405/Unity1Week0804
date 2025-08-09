@@ -12,26 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d6b03cf6d2c4d438bfe0c173c3d3b8, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  gameTimeSec: 40
+  gameTimeSec: 60
+  gameSceneName: GameScene
   beanPrefabs:
   - {fileID: 3205991919935867655, guid: 2fdeefaff904643e19a6355cc15bdd9c, type: 3}
   - {fileID: 1944676216339087392, guid: f0500d00975b14932bca181d7975dcf7, type: 3}
   - {fileID: 8300308145250064502, guid: 4728203e2b06f4618ba0de42cbfbd6f3, type: 3}
   - {fileID: 2188434847455760964, guid: 43741b293719544c4ad1572ec86725c6, type: 3}
   - {fileID: 7023765879481593722, guid: ee0985b1a659a4d0bbfffe35c55cab56, type: 3}
-  maxBeanCount: 30
-  beanSpawnRadius: 15
-  beanSpawnInterval: 0.3
+  maxBeanCount: 150
+  beanSpawnInterval: 0.1
   crushBeanEffectPrefab: {fileID: 40992636644726091, guid: 297dc4218d0439146a1bf4463ac45e20, type: 3}
   crushBaseDiffusion: 2.2
   crushDiffusionByPlayerSpeedRate: 5
   maxGroundBeans: 20
   maxGroundCoffee: 10
   baseMillGrindSpeed: 5
-  spillInterval: 0.5
-  scorePerGroundCoffee: 100
-  comboMultiplier: 5
-  comboTimeWindow: 2
-  crushRadius: 1.5
+  scorePerGroundCoffee: 150
   spillSpeedThreshold: 5
   minMillRotationForGrinding: 0.1
