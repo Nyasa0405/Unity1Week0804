@@ -52,8 +52,8 @@ namespace Component
 
         private void Update()
         {
-            // ゲームが開始されていない場合は何もしない
-            if (!GamePlayMode.Shared.IsGameActive)
+            // GamePlayMode.Sharedがnullまたはゲームが開始されていない場合は何もしない
+            if (GamePlayMode.Shared == null || !GamePlayMode.Shared.IsGameActive)
                 return;
 
             float distToPlayer = Vector3.Distance(transform.position, GamePlayMode.Shared.Player.Transform.position);
@@ -80,7 +80,10 @@ namespace Component
 
         private void OnDestroy()
         {
-            GamePlayMode.Shared.Beans.Remove(this);
+            if (GamePlayMode.Shared != null)
+            {
+                GamePlayMode.Shared.Beans.Remove(this);
+            }
             StopAllCoroutines();
         }
         public Guid Id { get; } = Guid.NewGuid();

@@ -80,6 +80,7 @@ namespace Main
                 StopCoroutine(gameTimerCoroutine);
             if (countdownCoroutine != null)
                 StopCoroutine(countdownCoroutine);
+            Shared = null;
         }
 
         private void StartCountdown()
@@ -172,13 +173,40 @@ namespace Main
         public void RestartGame()
         {
             Time.timeScale = 1f;
+            Player = null;
+            Beans.Clear();
+            
+            // コルーチンを停止
+            if (spawnCoroutine != null)
+                StopCoroutine(spawnCoroutine);
+            if (gameTimerCoroutine != null)
+                StopCoroutine(gameTimerCoroutine);
+            if (countdownCoroutine != null)
+                StopCoroutine(countdownCoroutine);
+            
+            // Sharedをnullに設定（OnDestroy()の代わり）
+            Shared = null;
+            
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         public void ReturnToTitle()
         {
             Time.timeScale = 1f;
-            // タイトルシーンに戻る（シーン名は適宜変更してください）
+            Player = null;
+            Beans.Clear();
+            
+            // コルーチンを停止
+            if (spawnCoroutine != null)
+                StopCoroutine(spawnCoroutine);
+            if (gameTimerCoroutine != null)
+                StopCoroutine(gameTimerCoroutine);
+            if (countdownCoroutine != null)
+                StopCoroutine(countdownCoroutine);
+            
+            // Sharedをnullに設定（OnDestroy()の代わり）
+            Shared = null;
+            
             SceneManager.LoadScene("Title");
         }
 

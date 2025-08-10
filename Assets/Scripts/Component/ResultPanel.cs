@@ -74,7 +74,6 @@ namespace Component
 
         private void ShowResult()
         {
-            Debug.Log("ShowResult");
             if (resultPanel != null)
                 resultPanel.SetActive(true);
             
