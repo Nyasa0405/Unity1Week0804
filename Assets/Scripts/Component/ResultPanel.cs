@@ -122,7 +122,7 @@ namespace Component
             PlayerState playerState = GamePlayMode.Shared.PlayerState;
             var text = $"轢乃珈琲店で{playerState.Score}点獲得！\n";
             // ツイート機能を呼び出す
-            UnityRoomTweet.Tweet(GamePlayMode.Shared.GameId, text, "unityroom", "unity1week", "轢乃珈琲");
+            UnityRoomTweet.Tweet(GamePlayMode.Shared.GameId, text, "unityroom", "unity1week", "轢乃珈琲店");
         }
     }
 } 
