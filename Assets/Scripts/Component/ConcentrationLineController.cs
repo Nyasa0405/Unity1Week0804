@@ -14,10 +14,15 @@ namespace Component
         {
             lineMaterial.SetFloat(SpeedLimit, 1f);
             lineMaterial.SetFloat(Speed, 0.2f);
+            lineMaterial.SetFloat(Alpha, 0f);
         }
         private void FixedUpdate()
         {
             float rate = 0f;
+            if (GamePlayMode.Shared == null || GamePlayMode.Shared.Player == null)
+            {
+                return;
+            }
             if (GamePlayMode.Shared.Player.Speed > 0.01f)
             {
                 rate = GamePlayMode.Shared.Player.Speed / GamePlayMode.Shared.Player.MaxSpeed;
