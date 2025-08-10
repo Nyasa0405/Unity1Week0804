@@ -8,7 +8,7 @@ namespace Model
         public struct ResultData
         {
             public int GroundBeans;
-            public int GroundCoffee;
+            public int MakeCoffee;
         }
         public ResultData Result;
         public int GroundBeans { get; private set; }
@@ -27,13 +27,13 @@ namespace Model
         {
             GroundCoffee = Mathf.Min(GroundCoffee + _amount, GamePlayMode.Shared.Settings.MaxGroundCoffee);
             Score += _amount * GamePlayMode.Shared.Settings.ScoreAddGroundCoffee;
-            Result.GroundCoffee += _amount;
 
             // 最大値に達したらスコアに変換
             if (GroundCoffee >= GamePlayMode.Shared.Settings.MaxGroundCoffee)
             {
                 Score += GamePlayMode.Shared.Settings.ScorePerGroundCoffee;
                 GroundCoffee = 0;
+                Result.MakeCoffee += 1;
                 
                 // コーヒー完成時の音を再生
                 GamePlayMode.Shared.PlayMakeCoffeeSound(_audioSource);
