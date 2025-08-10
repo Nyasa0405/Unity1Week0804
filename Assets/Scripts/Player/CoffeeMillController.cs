@@ -109,13 +109,16 @@ namespace Player
                 inputActions.Disable();
                 inputActions.Dispose();
             }
-            GamePlayMode.Shared.OnPlayerDestroyed(this);
+            if (GamePlayMode.Shared != null)
+            {
+                GamePlayMode.Shared.OnPlayerDestroyed(this);
+            }
         }
 
         private void FixedUpdate()
         {
-            // ゲームが開始されていない場合は入力を無効化
-            if (!GamePlayMode.Shared.IsGameActive)
+            // GamePlayMode.Sharedがnullまたはゲームが開始されていない場合は入力を無効化
+            if (GamePlayMode.Shared == null || !GamePlayMode.Shared.IsGameActive)
             {
                 throttleInput = 0f;
                 steeringInput = 0f;

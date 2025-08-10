@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using Main;
 using Model;
 using naichilab;
@@ -24,7 +25,7 @@ namespace Component
 
         private Coroutine sendScoreCoroutine;
 
-        private void OnEnable()
+        private void Start()
         {
             // 初期状態では非表示
             if (resultPanel != null)
@@ -47,7 +48,14 @@ namespace Component
             {
                 tweetButton.onClick.AddListener(OnTweetButtonClicked);
             }
-            
+
+            StartCoroutine(InitializeAsync());
+        }
+
+        private IEnumerator InitializeAsync()
+        {
+            // 非同期処理のために少し待機
+            yield return new WaitForSeconds(3f);
             // ゲーム終了イベントを購読
             GamePlayMode.Shared.OnGameEnded += ShowResult;
         }
@@ -93,10 +101,10 @@ namespace Component
                 scoreText.text = $"Score: {playerState.Score}";
             
             if (groundBeansText != null)
-                groundBeansText.text = $"Beans: {playerState.GroundBeans}";
+                groundBeansText.text = $"Beans: {playerState.Result.GroundBeans}";
             
             if (groundCoffeeText != null)
-                groundCoffeeText.text = $"Coffee: {playerState.GroundCoffee}";
+                groundCoffeeText.text = $"Coffee: {playerState.Result.MakeCoffee}";
         }
 
         private void OnRestartButtonClicked()
@@ -114,7 +122,7 @@ namespace Component
             PlayerState playerState = GamePlayMode.Shared.PlayerState;
             var text = $"轢乃珈琲店で{playerState.Score}点獲得！\n";
             // ツイート機能を呼び出す
-            UnityRoomTweet.Tweet(GamePlayMode.Shared.GameId, text, "unityroom", "unity1week");
+            UnityRoomTweet.Tweet(GamePlayMode.Shared.GameId, text, "unityroom", "unity1week", "轢乃珈琲");
         }
     }
 } 
