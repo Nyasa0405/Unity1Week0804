@@ -440,7 +440,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.683
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -1710,9 +1710,49 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1614278503233639210, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_Name
+      value: CoffeeBeans
+      objectReference: {fileID: 0}
+    - target: {fileID: 1912729059629182618, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_fontSize
+      value: 103.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 1912729059629182618, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: d1604f00b33422842a9c2c3b1ff4906c, type: 2}
+    - target: {fileID: 1912729059629182618, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1912729059629182618, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7677275668829378336, guid: d1604f00b33422842a9c2c3b1ff4906c, type: 2}
+    - target: {fileID: 1912729059629182618, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3026363443643208376, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5549304483079257220, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: fe59c413c93f84e35b87348888ba1908, type: 2}
+    - target: {fileID: 5549304483079257220, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7677275668829378336, guid: fe59c413c93f84e35b87348888ba1908, type: 2}
+    - target: {fileID: 5549304483079257220, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5932988907969012342, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_text
+      value: Beans
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
