@@ -13,6 +13,7 @@ namespace Model
         public void AddGroundBeans(int _amount)
         {
             GroundBeans = Mathf.Min(GroundBeans + _amount, GamePlayMode.Shared.Settings.MaxGroundBeans);
+            Score += _amount * GamePlayMode.Shared.Settings.ScoreAddGroundBean;
         }
 
         public void AddGroundCoffee(int _amount, AudioSource _audioSource)
