@@ -5,6 +5,12 @@ namespace Model
 {
     public class PlayerState
     {
+        public struct ResultData
+        {
+            public int GroundBeans;
+            public int GroundCoffee;
+        }
+        public ResultData Result;
         public int GroundBeans { get; private set; }
         public int GroundCoffee { get; private set; }
         public int Score { get; private set; }
@@ -14,12 +20,14 @@ namespace Model
         {
             GroundBeans = Mathf.Min(GroundBeans + _amount, GamePlayMode.Shared.Settings.MaxGroundBeans);
             Score += _amount * GamePlayMode.Shared.Settings.ScoreAddGroundBean;
+            Result.GroundBeans += _amount;
         }
 
         public void AddGroundCoffee(int _amount, AudioSource _audioSource)
         {
             GroundCoffee = Mathf.Min(GroundCoffee + _amount, GamePlayMode.Shared.Settings.MaxGroundCoffee);
             Score += _amount * GamePlayMode.Shared.Settings.ScoreAddGroundCoffee;
+            Result.GroundCoffee += _amount;
 
             // 最大値に達したらスコアに変換
             if (GroundCoffee >= GamePlayMode.Shared.Settings.MaxGroundCoffee)

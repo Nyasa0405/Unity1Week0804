@@ -101,10 +101,10 @@ namespace Component
                 scoreText.text = $"Score: {playerState.Score}";
             
             if (groundBeansText != null)
-                groundBeansText.text = $"Beans: {playerState.GroundBeans}";
+                groundBeansText.text = $"Beans: {playerState.Result.GroundBeans}";
             
             if (groundCoffeeText != null)
-                groundCoffeeText.text = $"Coffee: {playerState.GroundCoffee}";
+                groundCoffeeText.text = $"Coffee: {playerState.Result.GroundCoffee}";
         }
 
         private void OnRestartButtonClicked()
