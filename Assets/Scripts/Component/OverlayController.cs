@@ -8,18 +8,19 @@ namespace Component
 {
     public class OverlayController : MonoBehaviour
     {
+        private static readonly int LiquidPosition = Shader.PropertyToID("_LiquidPosition");
         [SerializeField]
-        private Slider beansSlider;
+        private Image beansSliderFill;
 
         [SerializeField]
-        private Slider coffeeSlider;
+        private Material coffeeSliderFill;
 
         [SerializeField]
         private TextMeshProUGUI scoreText;
 
         private void Start()
         {
-            if (beansSlider == null || coffeeSlider == null || scoreText == null)
+            if (beansSliderFill == null || coffeeSliderFill == null || scoreText == null)
             {
                 Debug.LogError("OverlayController: Missing UI components.");
                 return;
@@ -48,16 +49,15 @@ namespace Component
         {
             PlayerState playerState = GamePlayMode.Shared.PlayerState;
 
-            if (beansSlider != null)
+            if (beansSliderFill != null)
             {
-                beansSlider.value = playerState.GroundBeans;
-                beansSlider.maxValue = GamePlayMode.Shared.Settings.MaxGroundBeans;
+                beansSliderFill.fillAmount = playerState.GroundBeans / (float)GamePlayMode.Shared.Settings.MaxGroundBeans;
             }
 
-            if (coffeeSlider != null)
+            if (coffeeSliderFill != null)
             {
-                coffeeSlider.value = playerState.GroundCoffee;
-                coffeeSlider.maxValue = GamePlayMode.Shared.Settings.MaxGroundCoffee;
+                var rate = playerState.GroundCoffee / (float)GamePlayMode.Shared.Settings.MaxGroundCoffee;
+                coffeeSliderFill.SetFloat(LiquidPosition, rate);
             }
 
             if (scoreText != null)
