@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Main;
@@ -89,8 +90,15 @@ namespace Component
 
         private IEnumerator SendScoreCoroutine()
         {
-            yield return new WaitForSeconds(0.2f);
-            UnityroomApiClient.Instance.SendScore(1, GamePlayMode.Shared.PlayerState.Score, ScoreboardWriteMode.HighScoreDesc);
+            try
+            {
+                UnityroomApiClient.Instance.SendScore(1, GamePlayMode.Shared.PlayerState.Score, ScoreboardWriteMode.HighScoreDesc);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+            yield return null;
         }
 
         private void UpdateResultDisplay()
