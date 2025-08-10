@@ -104,7 +104,7 @@ namespace Component
                 groundBeansText.text = $"Beans: {playerState.Result.GroundBeans}";
             
             if (groundCoffeeText != null)
-                groundCoffeeText.text = $"Coffee: {playerState.Result.GroundCoffee}";
+                groundCoffeeText.text = $"Coffee: {playerState.Result.MakeCoffee}";
         }
 
         private void OnRestartButtonClicked()
