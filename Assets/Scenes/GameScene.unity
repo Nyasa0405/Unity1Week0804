@@ -2034,10 +2034,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6353762334995442648, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3966255018331155041, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
       propertyPath: m_Value
       value: 0
@@ -2046,12 +2042,25 @@ PrefabInstance:
       propertyPath: m_Colors.m_ColorMultiplier
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6353762334995442648, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: [{targetCorrespondingSourceObject: {fileID: 5569594172347927365, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}, insertIndex: -1, addedObject: {fileID: 1862028038}},
-      {targetCorrespondingSourceObject: {fileID: 5569594172347927365, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}, insertIndex: -1, addedObject: {fileID: 785018425}},
-      {targetCorrespondingSourceObject: {fileID: 4939588919547623650, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}, insertIndex: -1, addedObject: {fileID: 2092873220}},
-      {targetCorrespondingSourceObject: {fileID: 4939588919547623650, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}, insertIndex: -1, addedObject: {fileID: 1963077924}}]
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5569594172347927365, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1862028038}
+    - targetCorrespondingSourceObject: {fileID: 5569594172347927365, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 785018425}
+    - targetCorrespondingSourceObject: {fileID: 4939588919547623650, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2092873220}
+    - targetCorrespondingSourceObject: {fileID: 4939588919547623650, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1963077924}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90cec68f5d15d4d1cb0e9456db3fc66c, type: 3}
 --- !u!224 &5201229380638734207 stripped
@@ -2085,27 +2094,27 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1781944550182043487, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
-      propertyPath: spawnPoints.Array.data[0]
+      propertyPath: 'spawnPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 1140206735}
     - target: {fileID: 1781944550182043487, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
-      propertyPath: spawnPoints.Array.data[1]
+      propertyPath: 'spawnPoints.Array.data[1]'
       value: 
       objectReference: {fileID: 500276688}
     - target: {fileID: 1781944550182043487, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
-      propertyPath: spawnPoints.Array.data[2]
+      propertyPath: 'spawnPoints.Array.data[2]'
       value: 
       objectReference: {fileID: 1361560234}
     - target: {fileID: 1781944550182043487, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
-      propertyPath: spawnPoints.Array.data[3]
+      propertyPath: 'spawnPoints.Array.data[3]'
       value: 
       objectReference: {fileID: 1384406232}
     - target: {fileID: 1781944550182043487, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
-      propertyPath: spawnPoints.Array.data[4]
+      propertyPath: 'spawnPoints.Array.data[4]'
       value: 
       objectReference: {fileID: 1545620273}
     - target: {fileID: 1781944550182043487, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
-      propertyPath: spawnPoints.Array.data[5]
+      propertyPath: 'spawnPoints.Array.data[5]'
       value: 
       objectReference: {fileID: 1342409368}
     - target: {fileID: 4651217065093378883, guid: 35464fc82f50046a7ad1efb1ff324ae3, type: 3}
