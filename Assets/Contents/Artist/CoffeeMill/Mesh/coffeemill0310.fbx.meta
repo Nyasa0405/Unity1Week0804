@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: 0330711179f7f204fb2d9a31491db5b6
+guid: 90b59a9fb190c874ca5bd60de135ca93
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24200
   internalIDToNameTable: []
   externalObjects:
   - first:
@@ -12,18 +12,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: coffeemill_BaseColor
-    second: {fileID: 2800000, guid: 40eb72c6d633e654d9f0b538d0845fe5, type: 3}
+      name: coffeemill_BaseColor0309
+    second: {fileID: 2800000, guid: 4540eb1bfe9be4643a47415629017bfe, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: coffeemill_Metalness
-    second: {fileID: 2800000, guid: 8230f18b6074ef242b0f378ded4af6d9, type: 3}
+      name: coffeemill_Metalness0309
+    second: {fileID: 2800000, guid: d69788167df057b4bb87c6969c1eed2d, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: coffeemill_Roughness
-    second: {fileID: 2800000, guid: 7ecab8812c0d58546b34da3154193473, type: 3}
+      name: coffeemill_Roughness0309
+    second: {fileID: 2800000, guid: 98da05ee6696edf409e081e79ec208ea, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -76,6 +76,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
