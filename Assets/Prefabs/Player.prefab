@@ -79,7 +79,7 @@ MonoBehaviour:
   maxSpeed: 20
   accelerationForce: 1300
   maxSteerAngle: 25
-  millTransform: {fileID: 0}
+  millTransform: {fileID: 2060084626935285709}
   millRotationSpeed: 2000
   millResponseSpeed: 5
   forwardMillPower: 0.2
@@ -363,6 +363,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90b59a9fb190c874ca5bd60de135ca93, type: 3}
+--- !u!4 &2060084626935285709 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8091132604151060672, guid: 90b59a9fb190c874ca5bd60de135ca93, type: 3}
+  m_PrefabInstance: {fileID: 7845163012258914061}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7734131145805445350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 90b59a9fb190c874ca5bd60de135ca93, type: 3}

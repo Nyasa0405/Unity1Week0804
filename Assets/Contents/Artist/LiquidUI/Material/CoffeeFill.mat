@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CoffeFill
+  m_Name: CoffeeFill
   m_Shader: {fileID: -6465566751694194690, guid: b88f20ff05c10274aa92c83b1a35273a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -126,7 +126,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _LiquidPosition: 0
+    - _LiquidPosition: 0.1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
